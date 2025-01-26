@@ -25,14 +25,14 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BrowserContract.Accounts;
+import com.studio.browser.misc.BrowserContract.Accounts;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.studio.browser.AddBookmarkPage.BookmarkAccount;
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.provider.BrowserProvider2;
 
 public class BookmarkWidgetConfigure extends ListActivity

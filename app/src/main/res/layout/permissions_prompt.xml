@@ -36,16 +36,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/message"
-        android:layout_alignLeft="@id/message"
+        android:layout_alignStart="@id/message"
         android:visibility="invisible" />
     <TextView
-        android:paddingLeft="4dip"
+        android:paddingStart="4dip"
         android:text="@string/permissions_prompt_remember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignBaseline="@id/remember"
-        android:layout_toRightOf="@id/remember"
+        android:layout_toEndOf="@id/remember"
         android:visibility="invisible" />
 
     <LinearLayout

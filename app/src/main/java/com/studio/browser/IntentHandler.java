@@ -26,7 +26,7 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,7 +34,7 @@ import android.util.Patterns;
 
 import com.studio.browser.UI.ComboViews;
 import com.studio.browser.search.SearchEngine;
-import com.android.common.Search;
+import com.studio.browser.misc.Search;
 
 import java.util.HashMap;
 import java.util.Iterator;

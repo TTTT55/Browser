@@ -18,7 +18,7 @@ package com.studio.browser.view;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.provider.BrowserContract;
+import com.studio.browser.misc.BrowserContract;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -34,8 +34,8 @@ import android.widget.TextView;
 
 import com.studio.browser.BreadCrumbView;
 import com.studio.browser.BrowserBookmarksAdapter;
-import com.android.browser.R;
-import com.android.internal.view.menu.MenuBuilder;
+import com.studio.browser.R;
+import com.studio.browser.misc.MenuBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,8 +176,8 @@ public class BookmarkExpandableView extends ExpandableListView
         // have my extra info.
         ((MenuBuilder)menu).setCurrentMenuInfo(null);
 
-        if (mParent != null) {
-            mParent.createContextMenu(menu);
+        if (getParent() != null) {
+            getParent().createContextMenu(menu);
         }
     }
 

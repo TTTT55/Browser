@@ -19,14 +19,18 @@ package com.studio.browser;
 import com.studio.browser.preferences.WebsiteSettingsFragment;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.StatFs;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.webkit.WebStorage;
+
+import androidx.core.app.NotificationCompat;
 
 import java.io.File;
 
@@ -386,6 +390,11 @@ public class WebStorageSizeManager {
                 * ((maxSizeBytes / maxSizeStepBytes) + roundingExtra));
     }
 
+    // Unique ID for the notification
+    int NOTIFICATION_ID = 1001;
+    String CHANNEL_ID = "browser_notifications";
+    String CHANNEL_NAME = "Browser Notifications";
+
     // Schedules a system notification that takes the user to the WebSettings
     // activity when clicked.
     private void scheduleOutOfSpaceNotification() {
@@ -405,9 +414,29 @@ public class WebStorageSizeManager {
             intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
                     WebsiteSettingsFragment.class.getName());
             PendingIntent contentIntent =
-                PendingIntent.getActivity(mContext, 0, intent, 0);
+                PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             Notification notification = new Notification(icon, title, when);
-            notification.setLatestEventInfo(mContext, title, text, contentIntent);
+            //notification.setLatestEventInfo(mContext, title, text, contentIntent);
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Channel Name",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
+                    .setSmallIcon(icon) // Set the small icon
+                    .setContentTitle(title) // Set the notification title
+                    .setContentText(text) // Set the notification text
+                    .setWhen(when) // Set the time
+                    .setContentIntent(contentIntent) // Set the PendingIntent
+                    .setAutoCancel(true); // Dismiss the notification when tapped
+
+            // Build the notification
+            builder.build();
+
+            // Show the notification using the NotificationManager
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(NOTIFICATION_ID, notification);
+            notificationManager.createNotificationChannel(channel);
+
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
             // Fire away.
             String ns = Context.NOTIFICATION_SERVICE;

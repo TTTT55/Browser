@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
@@ -64,7 +65,7 @@ public class PhoneUi extends BaseUi {
         mNavigationBar = (NavigationBarPhone) mTitleBar.getNavigationBar();
         TypedValue heightValue = new TypedValue();
         browser.getTheme().resolveAttribute(
-                com.android.internal.R.attr.actionBarSize, heightValue, true);
+                R.attr.actionBarSize, heightValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(heightValue.data,
                 browser.getResources().getDisplayMetrics());
     }
@@ -337,6 +338,22 @@ public class PhoneUi extends BaseUi {
         }
     }
 
+    public int getTitleHeight(WebView webView) {
+        final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
+
+        // Use evaluateJavascript to get the height of the title element
+        webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String height) {
+                if (height != null) {
+                    titleHeight[0] = Integer.parseInt(height);
+                }
+            }
+        });
+        // Return the height (this will be 0 if the callback hasn't executed yet)
+        return titleHeight[0];
+    }
+
     void hideNavScreen(int position, boolean animate) {
         mShowNav = false;
         if (!showingNavScreen()) return;
@@ -377,7 +394,7 @@ public class PhoneUi extends BaseUi {
         mNavScreen.mScroller.finishScroller();
         ImageView target = tabview.mImage;
         int toLeft = 0;
-        int toTop = (tab.getWebView() != null) ? tab.getWebView().getVisibleTitleHeight() : 0;
+        int toTop = (tab.getWebView() != null) ? getTitleHeight(tab.getWebView()) : 0;
         int toRight = mContentView.getWidth();
         int width = target.getDrawable().getIntrinsicWidth();
         int height = target.getDrawable().getIntrinsicHeight();

@@ -14,12 +14,13 @@
      limitations under the License.
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/preferences_menu_id"
         android:title="@string/menu_preferences"
         android:icon="@drawable/ic_settings_holo_dark"
         android:alphabeticShortcut="p"
-        android:showAsAction="ifRoom"
-        android:orderInCategory="1000" />
+        android:orderInCategory="1000"
+        app:showAsAction="ifRoom" />
 </menu>

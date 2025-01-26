@@ -39,13 +39,13 @@ import com.studio.browser.SuggestionsAdapter.SuggestItem;
 import com.studio.browser.search.SearchEngine;
 import com.studio.browser.search.SearchEngineInfo;
 import com.studio.browser.search.SearchEngines;
-import com.android.internal.R;
+import com.studio.browser.R;
 
 /**
  * url/search input view
  * handling suggestions
  */
-public class UrlInputView extends AutoCompleteTextView
+public class UrlInputView extends androidx.appcompat.widget.AppCompatAutoCompleteTextView
         implements OnEditorActionListener,
         CompletionListener, OnItemClickListener, TextWatcher {
 
@@ -97,7 +97,7 @@ public class UrlInputView extends AutoCompleteTextView
         setOnItemClickListener(this);
         mNeedsUpdate = false;
         addTextChangedListener(this);
-        setDropDownAnchor(com.android.browser.R.id.taburlbar);
+        setDropDownAnchor(com.studio.browser.R.id.taburlbar);
         mState = StateListener.STATE_NORMAL;
     }
 
@@ -215,7 +215,7 @@ public class UrlInputView extends AutoCompleteTextView
     }
 
     void showIME() {
-        mInputManager.focusIn(this);
+        //mInputManager.focusIn(this); // Prolly need an alt for this. But comment it out for now.
         mInputManager.showSoftInput(this, 0);
     }
 
@@ -233,7 +233,7 @@ public class UrlInputView extends AutoCompleteTextView
                         .getSearchEngine();
                 if (searchEngine == null) return;
                 SearchEngineInfo engineInfo = SearchEngines
-                        .getSearchEngineInfo(mContext, searchEngine.getName());
+                        .getSearchEngineInfo(getContext(), searchEngine.getName());
                 if (engineInfo == null) return;
                 url = engineInfo.getSearchUriForQuery(url);
                 // mLister.onAction can take it from here without logging

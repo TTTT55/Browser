@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2008 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/MAIN_MENU">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/MAIN_MENU">
         <group
             android:id="@+id/NAV_MENU"
             android:visible="@bool/menu_show_navigation">
@@ -26,19 +11,19 @@
             <item
                 android:id="@+id/forward_menu_id"
                 android:title="@string/forward"
-                android:icon="@*android:drawable/ic_menu_forward" />
+                android:icon="@drawable/ic_menu_forward" />
         </group>
         <item
             android:id="@+id/new_tab_menu_id"
             android:title="@string/new_tab"
             android:icon="@drawable/ic_new_window_holo_dark"
-            android:showAsAction="never"
-            android:alphabeticShortcut="n" />
+            android:alphabeticShortcut="n"
+            app:showAsAction="never" />
         <item
             android:id="@+id/bookmarks_menu_id"
             android:title="@string/bookmarks"
             android:icon="@drawable/ic_bookmarks_holo_dark"
-            android:showAsAction="never" />
+            app:showAsAction="never" />
         <item
             android:id="@+id/add_bookmark_menu_id"
             android:title="@string/save_to_bookmarks"
@@ -54,7 +39,7 @@
                 android:alphabeticShortcut="s" />
             <item
                 android:id="@+id/find_menu_id"
-                android:title="@*android:string/find_on_page"/>
+                android:title="@string/find_on_page"/>
             <item
                 android:id="@+id/ua_desktop_menu_id"
                 android:checkable="true"
@@ -133,11 +118,11 @@
     <!-- these items are toggled in and out of @+id/stop_reload_menu_id -->
     <item android:id="@+id/stop_menu_id"
         android:title="@string/stop"
-        android:icon="@*android:drawable/ic_menu_stop"
+        android:icon="@drawable/ic_menu_stop"
         android:visible="false" />
     <item android:id="@+id/reload_menu_id"
         android:title="@string/reload"
-        android:icon="@*android:drawable/ic_menu_refresh"
+        android:icon="@drawable/ic_menu_refresh"
         android:visible="false" />
 </menu>
  

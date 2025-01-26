@@ -17,7 +17,7 @@ package com.studio.browser;
 
 import java.net.MalformedURLException;
 
-import libcore.io.Base64;
+import com.studio.browser.misc.Base64;
 
 /**
  * Class extracts the mime type and data from a data uri.

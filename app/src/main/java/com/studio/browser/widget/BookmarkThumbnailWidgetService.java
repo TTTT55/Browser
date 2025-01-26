@@ -29,15 +29,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Binder;
-import android.provider.BrowserContract;
-import android.provider.BrowserContract.Bookmarks;
+import com.studio.browser.misc.BrowserContract;
+import com.studio.browser.misc.BrowserContract.Bookmarks;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.studio.browser.BrowserActivity;
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.provider.BrowserProvider2;
 
 import java.io.File;
@@ -247,7 +247,7 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
                     views.setImageViewResource(R.id.thumb, R.drawable.thumb_bookmark_widget_folder_holo);
                 }
                 views.setImageViewResource(R.id.favicon, R.drawable.ic_bookmark_widget_bookmark_holo_dark);
-                views.setDrawableParameters(R.id.thumb, true, 0, -1, null, -1);
+                //views.setDrawableParameters(R.id.thumb, true, 0, -1, null, -1); // Hidden API
             } else {
                 // RemoteViews require a valid bitmap config
                 Options options = new Options();

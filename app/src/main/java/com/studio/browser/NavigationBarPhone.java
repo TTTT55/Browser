@@ -167,7 +167,7 @@ public class NavigationBarPhone extends NavigationBarBase implements
         return super.isMenuShowing() || mOverflowMenuShowing;
     }
 
-    void showMenu(View anchor) {
+    public void showMenu(View anchor) {
         Activity activity = mUiController.getActivity();
         if (mPopupMenu == null) {
             mPopupMenu = new PopupMenu(mContext, anchor);

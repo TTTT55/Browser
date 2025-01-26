@@ -41,6 +41,11 @@ class BookmarkItem extends HorizontalScrollView {
     protected String      mTitle;
     protected boolean mEnableScrolling = false;
 
+    int mPaddingTop = getPaddingTop();
+    int mPaddingBottom = getPaddingBottom();
+    int mPaddingLeft = getPaddingLeft();
+    int mPaddingRight = getPaddingRight();
+
     /**
      *  Instantiate a bookmark item, including a default favicon.
      *

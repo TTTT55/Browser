@@ -37,27 +37,26 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.provider.Browser;
-import android.provider.Browser.BookmarkColumns;
-import android.provider.BrowserContract;
-import android.provider.BrowserContract.Accounts;
-import android.provider.BrowserContract.Bookmarks;
-import android.provider.BrowserContract.ChromeSyncColumns;
-import android.provider.BrowserContract.Combined;
-import android.provider.BrowserContract.History;
-import android.provider.BrowserContract.Images;
-import android.provider.BrowserContract.Searches;
-import android.provider.BrowserContract.Settings;
-import android.provider.BrowserContract.SyncState;
+import com.studio.browser.misc.Browser;
+import com.studio.browser.misc.Browser.BookmarkColumns;
+import com.studio.browser.misc.BrowserContract;
+import com.studio.browser.misc.BrowserContract.Accounts;
+import com.studio.browser.misc.BrowserContract.Bookmarks;
+import com.studio.browser.misc.BrowserContract.ChromeSyncColumns;
+import com.studio.browser.misc.BrowserContract.Combined;
+import com.studio.browser.misc.BrowserContract.History;
+import com.studio.browser.misc.BrowserContract.Images;
+import com.studio.browser.misc.BrowserContract.Searches;
+import com.studio.browser.misc.BrowserContract.Settings;
+import com.studio.browser.misc.BrowserContract.SyncState;
 import android.provider.ContactsContract.RawContacts;
 import android.provider.SyncStateContract;
 import android.text.TextUtils;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.UrlUtils;
+import com.studio.browser.misc.SyncStateContentProviderHelper;
 import com.studio.browser.widget.BookmarkThumbnailWidgetProvider;
-import com.android.common.content.SyncStateContentProviderHelper;
-import com.google.common.annotations.VisibleForTesting;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -803,7 +802,6 @@ public class BrowserProvider2 extends SQLiteContentProvider {
         return uri.getBooleanQueryParameter(BrowserContract.CALLER_IS_SYNCADAPTER, false);
     }
 
-    @VisibleForTesting
     public void setWidgetObserver(ContentObserver obs) {
         mWidgetObserver = obs;
     }

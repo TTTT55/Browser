@@ -38,8 +38,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
-import android.provider.BrowserContract;
-import android.provider.BrowserContract.Combined;
+import com.studio.browser.misc.BrowserContract;
+import com.studio.browser.misc.BrowserContract.Combined;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -60,6 +60,8 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.studio.browser.misc.BrowserContract;
 
 /**
  * Activity for displaying the browser's history, divided into
@@ -325,7 +327,7 @@ public class BrowserHistoryPage extends Fragment
 
         @Override
         public void run() {
-            Browser.clearHistory(mResolver);
+            com.studio.browser.misc.Browser.clearHistory(mResolver);
         }
     }
 
@@ -396,37 +398,35 @@ public class BrowserHistoryPage extends Fragment
         String url = historyItem.getUrl();
         String title = historyItem.getName();
         Activity activity = getActivity();
-        switch (item.getItemId()) {
-            case R.id.open_context_menu_id:
-                mCallback.openUrl(url);
-                return true;
-            case R.id.new_window_context_menu_id:
-                mCallback.openInNewTab(url);
-                return true;
-            case R.id.save_to_bookmarks_menu_id:
-                if (historyItem.isBookmark()) {
-                    Bookmarks.removeFromBookmarks(activity, activity.getContentResolver(),
-                            url, title);
-                } else {
-                    Browser.saveBookmark(activity, title, url);
-                }
-                return true;
-            case R.id.share_link_context_menu_id:
-                Browser.sendString(activity, url,
-                        activity.getText(R.string.choosertitle_sharevia).toString());
-                return true;
-            case R.id.copy_url_context_menu_id:
-                copy(url);
-                return true;
-            case R.id.delete_context_menu_id:
-                Browser.deleteFromHistory(activity.getContentResolver(), url);
-                return true;
-            case R.id.homepage_context_menu_id:
-                BrowserSettings.getInstance().setHomePage(url);
-                Toast.makeText(activity, R.string.homepage_set, Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.open_context_menu_id) {
+            mCallback.openUrl(url);
+            return true;
+        } else if (itemId == R.id.new_window_context_menu_id) {
+            mCallback.openInNewTab(url);
+            return true;
+        } else if (itemId == R.id.save_to_bookmarks_menu_id) {
+            if (historyItem.isBookmark()) {
+                Bookmarks.removeFromBookmarks(activity, activity.getContentResolver(), url, title);
+            } else {
+                com.studio.browser.misc.Browser.saveBookmark(activity, title, url);
+            }
+            return true;
+        } else if (itemId == R.id.share_link_context_menu_id) {
+            Browser.sendString(activity, url);
+            return true;
+        } else if (itemId == R.id.copy_url_context_menu_id) {
+            copy(url);
+            return true;
+        } else if (itemId == R.id.delete_context_menu_id) {
+            com.studio.browser.misc.Browser.deleteFromHistory(activity.getContentResolver(), url);
+            return true;
+        } else if (itemId == R.id.homepage_context_menu_id) {
+            BrowserSettings.getInstance().setHomePage(url);
+            Toast.makeText(activity, R.string.homepage_set, Toast.LENGTH_LONG).show();
+            return true;
+        } else {
+            // Handle default case if necessary
         }
         return super.onContextItemSelected(item);
     }

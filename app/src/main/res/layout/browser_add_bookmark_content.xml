@@ -14,31 +14,35 @@
      limitations under the License.
 -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout android:id="@+id/crumb_holder"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/crumb_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:paddingLeft="5dip"
         android:paddingRight="5dip"
         android:orientation="horizontal"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        >
+        android:minHeight="?android:attr/listPreferredItemHeightSmall">
+
         <com.studio.browser.BreadCrumbView
             android:id="@+id/crumbs"
             android:layout_width="0dip"
             android:layout_weight="1"
             android:layout_height="match_parent" />
-        <View android:id="@+id/add_divider"
+
+        <View
+            android:id="@+id/add_divider"
             android:layout_width="1dip"
             android:layout_height="match_parent"
-            android:background="?android:attr/dividerVertical"
-            />
+            android:background="?android:attr/dividerVertical" />
+
         <TextView
             android:id="@+id/add_new_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_add_string"
             android:text="@string/new_folder"
             android:visibility="gone"
             android:focusable="true"
@@ -46,7 +50,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
-            android:paddingRight="8dip" />
+            android:paddingRight="8dip"
+            app:drawableLeftCompat="@drawable/ic_add_string" />
     </LinearLayout>
     <LinearLayout android:id="@+id/title_holder"
         android:layout_width="match_parent"
@@ -62,9 +67,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:drawableLeft="@drawable/ic_bookmark_on_holo_dark"
             android:text="@string/bookmark_this_page"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:drawableLeftCompat="@drawable/ic_bookmark_on_holo_dark" />
         <View android:id="@+id/remove_divider"
             android:layout_width="1dip"
             android:layout_height="match_parent"
@@ -77,9 +82,9 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="@string/remove"
-            android:drawableLeft="@drawable/trashcan"
             android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:drawableLeftCompat="@drawable/trashcan" />
     </LinearLayout>
 
     <FrameLayout
@@ -208,7 +213,7 @@
         <Button android:id="@+id/cancel"
             android:text="@string/do_not_save"
             android:layout_width="0dip"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_weight="1"
             android:maxLines="2"
             android:layout_height="wrap_content"

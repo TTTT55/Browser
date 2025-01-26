@@ -19,7 +19,7 @@ package com.studio.browser;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.net.Uri;
-import android.provider.BrowserContract.Bookmarks;
+import com.studio.browser.misc.BrowserContract.Bookmarks;
 
 public class BookmarksLoader extends CursorLoader {
     public static final String ARG_ACCOUNT_TYPE = "acct_type";

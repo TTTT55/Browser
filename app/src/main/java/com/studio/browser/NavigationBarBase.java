@@ -175,7 +175,7 @@ public class NavigationBarBase extends LinearLayout implements
         }
         if (source != null) {
             Bundle appData = new Bundle();
-            appData.putString(com.android.common.Search.SOURCE, source);
+            appData.putString(com.studio.browser.misc.Search.SOURCE, source);
             i.putExtra(SearchManager.APP_DATA, appData);
         }
         mUiController.handleNewIntent(i);

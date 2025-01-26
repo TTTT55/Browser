@@ -14,11 +14,12 @@
      limitations under the License.
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/share"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share"
         android:icon="@drawable/ic_share_holo_dark"
         android:title="@string/menu_share_url"
-        android:showAsAction="always|withText"
-        />
+        app:showAsAction="always|withText" />
 </menu>
 

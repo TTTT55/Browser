@@ -36,8 +36,8 @@ import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.BrowserContract;
-import android.provider.BrowserContract.Accounts;
+import com.studio.browser.misc.BrowserContract;
+import com.studio.browser.misc.BrowserContract.Accounts;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -49,6 +49,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 
+import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.provider.BrowserProvider2;
 import com.studio.browser.view.BookmarkExpandableView;
 
@@ -179,51 +180,36 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
         final Activity activity = getActivity();
         BrowserBookmarksAdapter adapter = getChildAdapter(groupPosition);
 
-        switch (itemId) {
-        case R.id.open_context_menu_id:
+        if (itemId == R.id.open_context_menu_id) {
             loadUrl(adapter, childPosition);
-            break;
-        case R.id.edit_context_menu_id:
+        } else if (itemId == R.id.edit_context_menu_id) {
             editBookmark(adapter, childPosition);
-            break;
-        case R.id.shortcut_context_menu_id:
+        } else if (itemId == R.id.shortcut_context_menu_id) {
             Cursor c = adapter.getItem(childPosition);
             activity.sendBroadcast(createShortcutIntent(getActivity(), c));
-            break;
-        case R.id.delete_context_menu_id:
+        } else if (itemId == R.id.delete_context_menu_id) {
             displayRemoveBookmarkDialog(adapter, childPosition);
-            break;
-        case R.id.new_window_context_menu_id:
+        } else if (itemId == R.id.new_window_context_menu_id) {
             openInNewWindow(adapter, childPosition);
-            break;
-        case R.id.share_link_context_menu_id: {
+        } else if (itemId == R.id.share_link_context_menu_id) {
             Cursor cursor = adapter.getItem(childPosition);
             Controller.sharePage(activity,
                     cursor.getString(BookmarksLoader.COLUMN_INDEX_TITLE),
                     cursor.getString(BookmarksLoader.COLUMN_INDEX_URL),
                     getBitmap(cursor, BookmarksLoader.COLUMN_INDEX_FAVICON),
                     getBitmap(cursor, BookmarksLoader.COLUMN_INDEX_THUMBNAIL));
-            break;
-        }
-        case R.id.copy_url_context_menu_id:
+        } else if (itemId == R.id.copy_url_context_menu_id) {
             copy(getUrl(adapter, childPosition));
-            break;
-        case R.id.homepage_context_menu_id: {
+        } else if (itemId == R.id.homepage_context_menu_id) {
             BrowserSettings.getInstance().setHomePage(getUrl(adapter, childPosition));
             Toast.makeText(activity, R.string.homepage_set, Toast.LENGTH_LONG).show();
-            break;
-        }
-        // Only for the Most visited page
-        case R.id.save_to_bookmarks_menu_id: {
+        } else if (itemId == R.id.save_to_bookmarks_menu_id) {
             Cursor cursor = adapter.getItem(childPosition);
             String name = cursor.getString(BookmarksLoader.COLUMN_INDEX_TITLE);
             String url = cursor.getString(BookmarksLoader.COLUMN_INDEX_URL);
-            // If the site is bookmarked, the item becomes remove from
-            // bookmarks.
+            // If the site is bookmarked, the item becomes remove from bookmarks.
             Bookmarks.removeFromBookmarks(activity, activity.getContentResolver(), url, name);
-            break;
-        }
-        default:
+        } else {
             return false;
         }
         return true;

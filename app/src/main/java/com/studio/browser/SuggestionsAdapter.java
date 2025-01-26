@@ -21,7 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.BrowserContract;
+import com.studio.browser.misc.BrowserContract;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,6 +34,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.search.SearchEngine;
 import com.studio.browser.provider.BrowserProvider2;
 

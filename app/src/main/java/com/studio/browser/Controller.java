@@ -16,6 +16,7 @@
 
 package com.studio.browser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ClipboardManager;
@@ -42,9 +43,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.provider.Browser;
-import android.provider.BrowserContract;
-import android.provider.BrowserContract.Images;
+import com.studio.browser.misc.Browser;
+import com.studio.browser.misc.BrowserContract;
+import com.studio.browser.misc.BrowserContract.Images;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Intents.Insert;
 import android.speech.RecognizerIntent;
@@ -73,10 +74,12 @@ import android.webkit.WebChromeClient.FileChooserParams;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.studio.browser.IntentHandler.UrlData;
 import com.studio.browser.UI.ComboViews;
+import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.provider.BrowserProvider2;
 
 import java.io.ByteArrayOutputStream;
@@ -467,6 +470,7 @@ public class Controller
         });
     }
 
+    @SuppressLint("HandlerLeak")
     private void startHandler() {
         mHandler = new Handler() {
 
@@ -491,27 +495,28 @@ public class Controller
                         if (getCurrentTopWebView() != view) {
                             break;
                         }
-                        switch (msg.arg1) {
-                            case R.id.open_context_menu_id:
-                                loadUrlFromContext(url);
-                                break;
-                            case R.id.view_image_context_menu_id:
-                                loadUrlFromContext(src);
-                                break;
-                            case R.id.open_newtab_context_menu_id:
-                                final Tab parent = mTabControl.getCurrentTab();
-                                openTab(url, parent,
-                                        !mSettings.openInBackground(), true);
-                                break;
-                            case R.id.copy_link_context_menu_id:
-                                copy(url);
-                                break;
-                            case R.id.save_link_context_menu_id:
-                            case R.id.download_context_menu_id:
-                                DownloadHandler.onDownloadStartNoStream(
-                                        mActivity, url, view.getSettings().getUserAgentString(),
-                                        null, null, null, view.isPrivateBrowsingEnabled());
-                                break;
+                        int id = msg.arg1; // Assuming msg is a Message object
+                        boolean handled = false;
+
+                        if (id == R.id.open_context_menu_id) {
+                            loadUrlFromContext(url);
+                            handled = true;
+                        } else if (id == R.id.view_image_context_menu_id) {
+                            loadUrlFromContext(src);
+                            handled = true;
+                        } else if (id == R.id.open_newtab_context_menu_id) {
+                            final Tab parent = mTabControl.getCurrentTab();
+                            openTab(url, parent, !mSettings.openInBackground(), true);
+                            handled = true;
+                        } else if (id == R.id.copy_link_context_menu_id) {
+                            copy(url);
+                            handled = true;
+                        } else if (id == R.id.save_link_context_menu_id ||
+                                id == R.id.download_context_menu_id) {
+                            DownloadHandler.onDownloadStartNoStream(
+                                    mActivity, url, view.getSettings().getUserAgentString(),
+                                    null, null, null, view.isPrivateBrowsingEnabled());
+                            handled = true;
                         }
                         break;
                     }
@@ -622,6 +627,7 @@ public class Controller
         mIntentHandler.onNewIntent(intent);
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onPause() {
         if (mUi.isCustomViewShowing()) {
@@ -649,7 +655,6 @@ public class Controller
         mUi.onPause();
         mNetworkHandler.onPause();
 
-        WebView.disablePlatformNotifications();
         NfcHandler.unregister(mActivity);
         if (sThumbnailBitmap != null) {
             sThumbnailBitmap.recycle();
@@ -699,7 +704,6 @@ public class Controller
 
         mUi.onResume();
         mNetworkHandler.onResume();
-        WebView.enablePlatformNotifications();
         NfcHandler.register(mActivity, this);
         if (mVoiceResult != null) {
             mUi.onVoiceResult(mVoiceResult);
@@ -997,6 +1001,10 @@ public class Controller
         task.execute();
     }
 
+    public boolean suppressDialog() {
+        return false;
+    }
+
     @Override
     public void onReceivedHttpAuthRequest(Tab tab, WebView view,
             final HttpAuthHandler handler, final String host,
@@ -1018,7 +1026,7 @@ public class Controller
         if (username != null && password != null) {
             handler.proceed(username, password);
         } else {
-            if (tab.inForeground() && !handler.suppressDialog()) {
+            if (tab.inForeground() && !suppressDialog()) {
                 mPageDialogsHandler.showHttpAuthentication(tab, handler, host, realm);
             } else {
                 handler.cancel();
@@ -1204,8 +1212,6 @@ public class Controller
 
     /**
      * Open the Go page.
-     * @param startWithHistory If true, open starting on the history tab.
-     *                         Otherwise, start with the bookmarks tab.
      */
     @Override
     public void bookmarksOrHistoryPicker(ComboViews startView) {
@@ -1564,135 +1570,84 @@ public class Controller
             // ui callback handled it
             return true;
         }
-        switch (item.getItemId()) {
-            // -- Main menu
-            case R.id.new_tab_menu_id:
-                openTabToHomePage();
-                break;
-
-            case R.id.close_other_tabs_id:
-                closeOtherTabs();
-                break;
-
-            case R.id.goto_menu_id:
-                editUrl();
-                break;
-
-            case R.id.bookmarks_menu_id:
-                bookmarksOrHistoryPicker(ComboViews.Bookmarks);
-                break;
-
-            case R.id.history_menu_id:
-                bookmarksOrHistoryPicker(ComboViews.History);
-                break;
-
-            case R.id.snapshots_menu_id:
-                bookmarksOrHistoryPicker(ComboViews.Snapshots);
-                break;
-
-            case R.id.add_bookmark_menu_id:
-                bookmarkCurrentPage();
-                break;
-
-            case R.id.stop_reload_menu_id:
-                if (isInLoad()) {
-                    stopLoading();
-                } else {
-                    getCurrentTopWebView().reload();
-                }
-                break;
-
-            case R.id.back_menu_id:
-                getCurrentTab().goBack();
-                break;
-
-            case R.id.forward_menu_id:
-                getCurrentTab().goForward();
-                break;
-
-            case R.id.close_menu_id:
-                // Close the subwindow if it exists.
-                if (mTabControl.getCurrentSubWindow() != null) {
-                    dismissSubWindow(mTabControl.getCurrentTab());
+        if (item.getItemId() == R.id.new_tab_menu_id) {
+            openTabToHomePage();
+        } else if (item.getItemId() == R.id.close_other_tabs_id) {
+            closeOtherTabs();
+        } else if (item.getItemId() == R.id.goto_menu_id) {
+            editUrl();
+        } else if (item.getItemId() == R.id.bookmarks_menu_id) {
+            bookmarksOrHistoryPicker(ComboViews.Bookmarks);
+        } else if (item.getItemId() == R.id.history_menu_id) {
+            bookmarksOrHistoryPicker(ComboViews.History);
+        } else if (item.getItemId() == R.id.snapshots_menu_id) {
+            bookmarksOrHistoryPicker(ComboViews.Snapshots);
+        } else if (item.getItemId() == R.id.add_bookmark_menu_id) {
+            bookmarkCurrentPage();
+        } else if (item.getItemId() == R.id.stop_reload_menu_id) {
+            if (isInLoad()) {
+                stopLoading();
+            } else {
+                getCurrentTopWebView().reload();
+            }
+        } else if (item.getItemId() == R.id.back_menu_id) {
+            getCurrentTab().goBack();
+        } else if (item.getItemId() == R.id.forward_menu_id) {
+            getCurrentTab().goForward();
+        } else if (item.getItemId() == R.id.close_menu_id) {
+            if (mTabControl.getCurrentSubWindow() != null) {
+                dismissSubWindow(mTabControl.getCurrentTab());
+            } else {
+                closeCurrentTab();
+            }
+        } else if (item.getItemId() == R.id.homepage_menu_id) {
+            Tab current = mTabControl.getCurrentTab();
+            loadUrl(current, mSettings.getHomePage());
+        } else if (item.getItemId() == R.id.preferences_menu_id) {
+            openPreferences();
+        } else if (item.getItemId() == R.id.find_menu_id) {
+            findOnPage();
+        } else if (item.getItemId() == R.id.page_info_menu_id) {
+            showPageInfo();
+        } else if (item.getItemId() == R.id.snapshot_go_live) {
+            goLive();
+            return true;
+        } else if (item.getItemId() == R.id.share_page_menu_id) {
+            Tab currentTab = mTabControl.getCurrentTab();
+            if (currentTab == null) {
+                return false;
+            }
+            shareCurrentPage(currentTab);
+        } else if (item.getItemId() == R.id.dump_nav_menu_id) {
+            getCurrentTopWebView();
+        } else if (item.getItemId() == R.id.zoom_in_menu_id) {
+            getCurrentTopWebView().zoomIn();
+        } else if (item.getItemId() == R.id.zoom_out_menu_id) {
+            getCurrentTopWebView().zoomOut();
+        } else if (item.getItemId() == R.id.view_downloads_menu_id) {
+            viewDownloads();
+        } else if (item.getItemId() == R.id.ua_desktop_menu_id) {
+            toggleUserAgent();
+        } else if (item.getItemId() == R.id.window_one_menu_id ||
+                item.getItemId() == R.id.window_two_menu_id ||
+                item.getItemId() == R.id.window_three_menu_id ||
+                item.getItemId() == R.id.window_four_menu_id ||
+                item.getItemId() == R.id.window_five_menu_id ||
+                item.getItemId() == R.id.window_six_menu_id ||
+                item.getItemId() == R.id.window_seven_menu_id ||
+                item.getItemId() == R.id.window_eight_menu_id) {
+            int menuid = item.getItemId();
+            for (int id = 0; id < WINDOW_SHORTCUT_ID_ARRAY.length; id++) {
+                if (WINDOW_SHORTCUT_ID_ARRAY[id] == menuid) {
+                    Tab desiredTab = mTabControl.getTab(id);
+                    if (desiredTab != null && desiredTab != mTabControl.getCurrentTab()) {
+                        switchToTab(desiredTab);
+                    }
                     break;
                 }
-                closeCurrentTab();
-                break;
-
-            case R.id.homepage_menu_id:
-                Tab current = mTabControl.getCurrentTab();
-                loadUrl(current, mSettings.getHomePage());
-                break;
-
-            case R.id.preferences_menu_id:
-                openPreferences();
-                break;
-
-            case R.id.find_menu_id:
-                findOnPage();
-                break;
-
-            case R.id.page_info_menu_id:
-                showPageInfo();
-                break;
-
-            case R.id.snapshot_go_live:
-                goLive();
-                return true;
-
-            case R.id.share_page_menu_id:
-                Tab currentTab = mTabControl.getCurrentTab();
-                if (null == currentTab) {
-                    return false;
-                }
-                shareCurrentPage(currentTab);
-                break;
-
-            case R.id.dump_nav_menu_id:
-                getCurrentTopWebView().debugDump();
-                break;
-
-            case R.id.zoom_in_menu_id:
-                getCurrentTopWebView().zoomIn();
-                break;
-
-            case R.id.zoom_out_menu_id:
-                getCurrentTopWebView().zoomOut();
-                break;
-
-            case R.id.view_downloads_menu_id:
-                viewDownloads();
-                break;
-
-            case R.id.ua_desktop_menu_id:
-                toggleUserAgent();
-                break;
-
-            case R.id.window_one_menu_id:
-            case R.id.window_two_menu_id:
-            case R.id.window_three_menu_id:
-            case R.id.window_four_menu_id:
-            case R.id.window_five_menu_id:
-            case R.id.window_six_menu_id:
-            case R.id.window_seven_menu_id:
-            case R.id.window_eight_menu_id:
-                {
-                    int menuid = item.getItemId();
-                    for (int id = 0; id < WINDOW_SHORTCUT_ID_ARRAY.length; id++) {
-                        if (WINDOW_SHORTCUT_ID_ARRAY[id] == menuid) {
-                            Tab desiredTab = mTabControl.getTab(id);
-                            if (desiredTab != null &&
-                                    desiredTab != mTabControl.getCurrentTab()) {
-                                switchToTab(desiredTab);
-                            }
-                            break;
-                        }
-                    }
-                }
-                break;
-
-            default:
-                return false;
+            }
+        } else {
+            return false;
         }
         return true;
     }
@@ -1744,28 +1699,22 @@ public class Controller
 
         int id = item.getItemId();
         boolean result = true;
-        switch (id) {
-            // -- Browser context menu
-            case R.id.open_context_menu_id:
-            case R.id.save_link_context_menu_id:
-            case R.id.copy_link_context_menu_id:
-                final WebView webView = getCurrentTopWebView();
-                if (null == webView) {
-                    result = false;
-                    break;
-                }
-                final HashMap<String, WebView> hrefMap =
-                        new HashMap<String, WebView>();
-                hrefMap.put("webview", webView);
-                final Message msg = mHandler.obtainMessage(
-                        FOCUS_NODE_HREF, id, 0, hrefMap);
-                webView.requestFocusNodeHref(msg);
-                break;
+        final WebView webView = getCurrentTopWebView();
 
-            default:
-                // For other context menus
-                result = onOptionsItemSelected(item);
+        if (webView == null) {
+            result = false; // If webView is null, set result to false
+        } else if (id == R.id.open_context_menu_id ||
+                id == R.id.save_link_context_menu_id ||
+                id == R.id.copy_link_context_menu_id) {
+            final HashMap<String, WebView> hrefMap = new HashMap<>();
+            hrefMap.put("webview", webView);
+            final Message msg = mHandler.obtainMessage(FOCUS_NODE_HREF, id, 0, hrefMap);
+            webView.requestFocusNodeHref(msg);
+        } else {
+            // For other context menus
+            result = onOptionsItemSelected(item);
         }
+
         return result;
     }
 
@@ -1898,7 +1847,6 @@ public class Controller
 
     /**
      * add the current page as a bookmark to the given folder id
-     * @param folderId use -1 for the default folder
      * @param editExisting If true, check to see whether the site is already
      *          bookmarked, and if it is, edit that bookmark.  If false, and
      *          the site is already bookmarked, do not attempt to edit the
@@ -1914,7 +1862,7 @@ public class Controller
                 AddBookmarkPage.class);
         i.putExtra(BrowserContract.Bookmarks.URL, w.getUrl());
         i.putExtra(BrowserContract.Bookmarks.TITLE, w.getTitle());
-        String touchIconUrl = w.getTouchIconUrl();
+        /*String touchIconUrl = w.getTouchIconUrl();
         if (touchIconUrl != null) {
             i.putExtra(AddBookmarkPage.TOUCH_ICON_URL, touchIconUrl);
             WebSettings settings = w.getSettings();
@@ -1922,7 +1870,33 @@ public class Controller
                 i.putExtra(AddBookmarkPage.USER_AGENT,
                         settings.getUserAgentString());
             }
-        }
+        }*/
+        w.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                // JavaScript to get the touch icon URL
+                view.evaluateJavascript(
+                        "(function() { " +
+                                "var link = document.querySelector('link[rel=\"apple-touch-icon\"]'); " +
+                                "return link ? link.href : ''; " +
+                                "})()",
+                        new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                // value will contain the touch icon URL
+                                String touchIconUrl = value.replace("\"", ""); // Clean up the string
+                                if (touchIconUrl != null) {
+                                    i.putExtra(AddBookmarkPage.TOUCH_ICON_URL, touchIconUrl);
+                                    WebSettings settings = w.getSettings();
+                                    if (settings != null) {
+                                        i.putExtra(AddBookmarkPage.USER_AGENT,
+                                                settings.getUserAgentString());
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
         i.putExtra(BrowserContract.Bookmarks.THUMBNAIL,
                 createScreenshot(w, getDesiredThumbnailWidth(mActivity),
                 getDesiredThumbnailHeight(mActivity)));
@@ -1969,7 +1943,7 @@ public class Controller
 
     static Bitmap createScreenshot(WebView view, int width, int height) {
         if (view == null || view.getContentHeight() == 0
-                || view.getContentWidth() == 0) {
+                || view.getWidth() == 0) {
             return null;
         }
         // We render to a bitmap 2x the desired size so that we can then
@@ -1988,7 +1962,7 @@ public class Controller
                     Bitmap.createBitmap(scaledWidth, scaledHeight, Bitmap.Config.RGB_565);
         }
         Canvas canvas = new Canvas(sThumbnailBitmap);
-        int contentWidth = view.getContentWidth();
+        int contentWidth = view.getWidth();
         float overviewScale = scaledWidth / (view.getScale() * contentWidth);
         if (view instanceof BrowserWebView) {
             int dy = -((BrowserWebView)view).getTitleHeight();
@@ -2444,7 +2418,6 @@ public class Controller
      * Load the URL into the given WebView and update the title bar
      * to reflect the new load.  Call this instead of WebView.loadUrl
      * directly.
-     * @param view The WebView used to load url.
      * @param url The URL to load.
      */
     @Override

@@ -18,7 +18,7 @@ package com.studio.browser.preferences;
 
 import com.studio.browser.BrowserActivity;
 import com.studio.browser.PreferenceKeys;
-import com.android.browser.R;
+import com.studio.browser.R;
 
 import android.content.Intent;
 import android.content.res.Resources;

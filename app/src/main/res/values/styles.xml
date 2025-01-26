@@ -18,18 +18,21 @@
  */
 -->
 <resources>
-    <style name="BrowserTheme" parent="@android:Theme.Holo">
+    <style name="BrowserTheme" parent="Theme.AppCompat">
         <item name="android:windowBackground">@color/white</item>
         <item name="android:colorBackground">#FFFFFFFF</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.AutoCompleteTextView</item>
+        <item name="android:yesNoPreferenceStyle">@style/YesNoPreference</item>
     </style>
     <style name="DialogWhenLarge" parent="@android:style/Theme.Holo.DialogWhenLarge" >
         <item name="android:windowActionBar">false</item>
     </style>
-    <style name="BookmarkTheme" parent="@android:Theme.Holo">
+    <style name="BookmarkTheme" parent="Theme.AppCompat">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
@@ -58,7 +61,7 @@
     <style name="ActionBar" parent="@android:style/Widget.ActionBar">
         <item name="android:background">@color/black</item>
     </style>
-    <style name="ShortcutTheme" parent="@android:Theme.Holo.DialogWhenLarge">
+    <style name="ShortcutTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
     </style>
     <style name="TitleBar">
         <item name="android:windowEnterAnimation">@anim/title_bar_enter</item>
@@ -93,4 +96,32 @@
         <item name="android:imeOptions">flagNoExtractUi|actionNext</item>
         <item name="android:singleLine">true</item>
     </style>
+    <style name="Preference">
+        <item name="layout">@layout/preference</item>
+    </style>
+    <style name="Widget">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+    <style name="Preference.SeekBarPreference">
+        <item name="layout">@layout/preference_widget_seekbar</item>
+    </style>
+    <style name="Widget.ProgressBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_medium_white</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDuration">3500</item>
+        <item name="minWidth">48dip</item>
+        <item name="maxWidth">48dip</item>
+        <item name="minHeight">48dip</item>
+        <item name="maxHeight">48dip</item>
+    </style>
+    <style name="YesNoPreference" parent="Theme.AppCompat.Dialog">
+        <item name="android:positiveButtonText">@string/yes</item>
+        <item name="android:negativeButtonText">@string/no</item>
+    </style>
+    <style name="SeekBarPreference" parent="Preference.SeekBarPreference" />
+    <style name="ProgressBar" parent="Widget.ProgressBar" />
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

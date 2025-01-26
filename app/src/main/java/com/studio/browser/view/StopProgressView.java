@@ -1,7 +1,7 @@
 
 package com.studio.browser.view;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -57,7 +57,7 @@ public class StopProgressView extends ProgressBar {
 
     private void init(AttributeSet attrs) {
         mProgressDrawable = getIndeterminateDrawable();
-        setImageDrawable(mContext.getResources()
+        setImageDrawable(getContext().getResources()
                 .getDrawable(R.drawable.ic_stop_holo_dark));
     }
 

@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:paddingTop="16dip"
                 android:paddingBottom="8dip"
-                android:gravity="center_vertical|left"
+                android:gravity="center_vertical|start"
                 android:layout_marginLeft="48dip"
                 android:layout_marginRight="48dip"
                 />
@@ -81,7 +81,7 @@
                     android:paddingRight="32dip"
                     android:src="#404040"
                 />
-            <android.preference.PreferenceFrameLayout android:id="@+id/prefs"
+            <com.studio.browser.misc.PreferenceFrameLayout android:id="@+id/prefs"
                     android:layout_width="match_parent"
                     android:layout_height="0dip"
                     android:layout_weight="1"

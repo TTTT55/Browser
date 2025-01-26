@@ -78,7 +78,7 @@ import java.util.regex.Pattern;
 /**
  * Class for maintaining Tabs with a main WebView and a subwindow.
  */
-class Tab implements PictureListener {
+public class Tab implements PictureListener {
 
     // Log Tag
     private static final String LOGTAG = "Tab";
@@ -183,7 +183,6 @@ class Tab implements PictureListener {
     private boolean mUpdateThumbnail;
 
     /**
-     * See {@link #clearBackStackWhenItemAdded(String)}.
      */
     private Pattern mClearHistoryUrlPattern;
 
@@ -197,13 +196,13 @@ class Tab implements PictureListener {
 
     // All the state needed for a page
     protected static class PageState {
-        String mUrl;
+        public String mUrl;
         String mOriginalUrl;
-        String mTitle;
+        public String mTitle;
         SecurityState mSecurityState;
         // This is non-null only when mSecurityState is SECURITY_STATE_BAD_CERTIFICATE.
         SslError mSslCertificateError;
-        Bitmap mFavicon;
+        public Bitmap mFavicon;
         boolean mIsBookmarkedSite;
         boolean mIncognito;
 
@@ -870,7 +869,6 @@ class Tab implements PictureListener {
          *            be executed at some point to ensure that the sleeping
          *            WebCore thread is woken up.
          */
-        @Override
         public void onReachedMaxAppCacheSize(long spaceNeeded,
                 long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
             mSettings.getWebStorageSizeManager()
@@ -1117,7 +1115,7 @@ class Tab implements PictureListener {
         this(wvcontroller, null, state);
     }
 
-    Tab(WebViewController wvcontroller, WebView w, Bundle state) {
+    public Tab(WebViewController wvcontroller, WebView w, Bundle state) {
         mWebViewController = wvcontroller;
         mContext = mWebViewController.getContext();
         mSettings = BrowserSettings.getInstance();
@@ -1220,7 +1218,7 @@ class Tab implements PictureListener {
         return mId;
     }
 
-    void setWebView(WebView w) {
+    protected void setWebView(WebView w) {
         setWebView(w, true);
     }
 
@@ -1401,7 +1399,7 @@ class Tab implements PictureListener {
      * associate the Tabs.
      * @param child the Tab that was created from this Tab
      */
-    void addChildTab(Tab child) {
+    public void addChildTab(Tab child) {
         if (mChildren == null) {
             mChildren = new Vector<Tab>();
         }
@@ -1442,7 +1440,7 @@ class Tab implements PictureListener {
         }
     }
 
-    void putInForeground() {
+    public void putInForeground() {
         if (mInForeground) {
             return;
         }
@@ -1460,7 +1458,7 @@ class Tab implements PictureListener {
         mWebViewController.bookmarkedStatusHasChanged(this);
     }
 
-    void putInBackground() {
+    protected void putInBackground() {
         if (!mInForeground) {
             return;
         }
@@ -1495,7 +1493,7 @@ class Tab implements PictureListener {
      * non-null for the current tab.
      * @return The main WebView of this tab.
      */
-    WebView getWebView() {
+    protected WebView getWebView() {
         return mMainView;
     }
 
@@ -1584,7 +1582,7 @@ class Tab implements PictureListener {
         mCloseOnBack = close;
     }
 
-    String getUrl() {
+    public String getUrl() {
         return UrlUtils.filteredUrl(mCurrentState.mUrl);
     }
 
@@ -1598,7 +1596,7 @@ class Tab implements PictureListener {
     /**
      * Get the title of this tab.
      */
-    String getTitle() {
+    public String getTitle() {
         if (mCurrentState.mTitle == null && mInPageLoad) {
             return mContext.getString(R.string.title_bar_loading);
         }
@@ -1608,7 +1606,7 @@ class Tab implements PictureListener {
     /**
      * Get the favicon of this tab.
      */
-    Bitmap getFavicon() {
+    public Bitmap getFavicon() {
         if (mCurrentState.mFavicon != null) {
             return mCurrentState.mFavicon;
         }
@@ -1825,14 +1823,31 @@ class Tab implements PictureListener {
         mDisableOverrideUrlLoading = true;
     }
 
+    public int getTitleHeight(WebView webView) {
+        final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
+
+        // Use evaluateJavascript to get the height of the title element
+        webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String height) {
+                if (height != null) {
+                    titleHeight[0] = Integer.parseInt(height);
+                }
+            }
+        });
+
+        // Return the height (this will be 0 if the callback hasn't executed yet)
+        return titleHeight[0];
+    }
+
     protected void capture() {
         if (mMainView == null || mCapture == null) return;
-        if (mMainView.getContentWidth() <= 0 || mMainView.getContentHeight() <= 0) {
+        if (mMainView.getWidth() <= 0 || mMainView.getContentHeight() <= 0) {
             return;
         }
         Canvas c = new Canvas(mCapture);
         final int left = mMainView.getScrollX();
-        final int top = mMainView.getScrollY() + mMainView.getVisibleTitleHeight();
+        final int top = mMainView.getScrollY() + getTitleHeight(mMainView);
         int state = c.save();
         c.translate(-left, -top);
         float scale = mCaptureWidth / (float) mMainView.getWidth();

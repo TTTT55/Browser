@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<merge
+<merge xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout android:id="@+id/fullscreen_custom_content"
         android:visibility="gone"
@@ -31,7 +31,7 @@
         <LinearLayout android:id="@+id/error_console"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        />
+            tools:ignore="Orientation" />
 
         <FrameLayout android:id="@+id/fixed_titlebar_container"
             android:layout_width="match_parent"

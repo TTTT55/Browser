@@ -22,13 +22,13 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
-import android.provider.BrowserContract.Bookmarks;
-import android.provider.BrowserContract.History;
+import com.studio.browser.misc.BrowserContract.Bookmarks;
+import com.studio.browser.misc.BrowserContract.History;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.homepages.Template.ListEntityIterator;
 
 import java.io.File;

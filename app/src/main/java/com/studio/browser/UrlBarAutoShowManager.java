@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
 import com.studio.browser.BrowserWebView.OnScrollChangedListener;
@@ -125,7 +126,7 @@ public class UrlBarAutoShowManager implements OnTouchListener,
                     float angle = (float) Math.atan2(ady, adx);
                     if (dy > mSlop && angle > V_TRIGGER_ANGLE
                             && !mUi.isTitleBarShowing()
-                            && (web.getVisibleTitleHeight() == 0
+                            && (getTitleHeight(web) == 0
                             || (!mIsScrolling && web.getScrollY() > 0))) {
                         mTriggeredTime = SystemClock.uptimeMillis();
                         mUi.showTitleBar();
@@ -139,6 +140,23 @@ public class UrlBarAutoShowManager implements OnTouchListener,
             break;
         }
         return false;
+    }
+
+    public int getTitleHeight(WebView webView) {
+        final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
+
+        // Use evaluateJavascript to get the height of the title element
+        webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String height) {
+                if (height != null) {
+                    titleHeight[0] = Integer.parseInt(height);
+                }
+            }
+        });
+
+        // Return the height (this will be 0 if the callback hasn't executed yet)
+        return titleHeight[0];
     }
 
 }

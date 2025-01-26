@@ -29,7 +29,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceActivity;
-import android.provider.BrowserContract.Bookmarks;
+import com.studio.browser.misc.BrowserContract.Bookmarks;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +43,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.WebStorageSizeManager;
 
 import java.util.HashMap;
@@ -680,9 +680,9 @@ public class WebsiteSettingsFragment extends ListFragment implements OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.clear_all_button:
-         // Show the prompt to clear all origins of their data and geolocation permissions.
+        int viewId = v.getId();
+        if (viewId == R.id.clear_all_button) {
+            // Show the prompt to clear all origins of their data and geolocation permissions.
             new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.website_settings_clear_all_dialog_message)
                     .setPositiveButton(R.string.website_settings_clear_all_dialog_ok_button,
@@ -697,7 +697,6 @@ public class WebsiteSettingsFragment extends ListFragment implements OnClickList
                     .setNegativeButton(R.string.website_settings_clear_all_dialog_cancel_button, null)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .show();
-            break;
         }
     }
 }

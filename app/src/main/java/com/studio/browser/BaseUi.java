@@ -52,7 +52,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.studio.browser.Tab.SecurityState;
-import com.android.internal.view.menu.MenuBuilder;
+import com.studio.browser.misc.MenuBuilder;
 
 import java.util.List;
 
@@ -477,7 +477,7 @@ public abstract class BaseUi implements UI {
                 && !mUiController.isInCustomActionMode();
     }
 
-    protected void showTitleBar() {
+    public void showTitleBar() {
         mHandler.removeMessages(MSG_HIDE_TITLEBAR);
         if (canShowTitleBar()) {
             mTitleBar.show();
@@ -810,7 +810,7 @@ public abstract class BaseUi implements UI {
         }
     }
 
-    protected final void showTitleBarForDuration() {
+    public final void showTitleBarForDuration() {
         showTitleBarForDuration(HIDE_TITLEBAR_DELAY);
     }
 

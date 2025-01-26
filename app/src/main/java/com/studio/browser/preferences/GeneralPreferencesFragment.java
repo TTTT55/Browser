@@ -36,7 +36,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.studio.browser.BrowserPreferencesPage;
 import com.studio.browser.BrowserSettings;
-import com.android.browser.R;
+import com.studio.browser.R;
 import com.studio.browser.UrlUtils;
 import com.studio.browser.homepages.HomeProvider;
 

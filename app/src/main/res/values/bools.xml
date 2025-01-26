@@ -19,4 +19,5 @@
     <!-- Browser menu toggles -->
     <bool name="menu_show_navigation">true</bool>
     <bool name="menu_show_bookmarks">true</bool>
+    <bool name="config_showMenuShortcutsWhenKeyboardPresent">true</bool>
 </resources>

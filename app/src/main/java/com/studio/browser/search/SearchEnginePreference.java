@@ -15,7 +15,7 @@
  */
 package com.studio.browser.search;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 
 import android.content.Context;
 import android.preference.ListPreference;

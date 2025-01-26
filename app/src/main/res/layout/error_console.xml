@@ -28,12 +28,12 @@
         android:layout_height="wrap_content"
         android:paddingTop="2dip"
         android:paddingBottom="2dip"
-        android:paddingLeft="5dip"
+        android:paddingStart="5dip"
         style="?android:attr/listSeparatorTextViewStyle"
         android:visibility="gone"
     />
 
-    <view class="com.android.browser.ErrorConsoleView$ErrorConsoleListView"
+    <view class="com.studio.browser.ErrorConsoleView$ErrorConsoleListView"
         android:id="@+id/error_console_list_id"
         android:layout_width="match_parent"
         android:layout_height="200dip"
@@ -42,7 +42,7 @@
         android:cacheColorHint="#000000"
     />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/error_console_eval_view_group_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

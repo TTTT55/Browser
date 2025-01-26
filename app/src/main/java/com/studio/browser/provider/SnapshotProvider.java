@@ -27,10 +27,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.FileUtils;
-import android.provider.BrowserContract;
+import com.studio.browser.misc.BrowserContract;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SnapshotProvider extends ContentProvider {
 
@@ -117,6 +121,53 @@ public class SnapshotProvider extends ContentProvider {
         return new File(dir, SnapshotDatabaseHelper.DATABASE_NAME);
     }
 
+    /**
+     * Copy data from a source stream to destFile.
+     * Return true if succeed, return false if failed.
+     */
+    public static boolean copyToFile(InputStream inputStream, File destFile) {
+        try {
+            if (destFile.exists()) {
+                destFile.delete();
+            }
+            FileOutputStream out = new FileOutputStream(destFile);
+            try {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) >= 0) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            } finally {
+                out.flush();
+                try {
+                    out.getFD().sync();
+                } catch (IOException e) {
+                }
+                out.close();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    // copy a file from srcFile to destFile, return true if succeed, return
+    // false if fail
+    public static boolean copyFile(File srcFile, File destFile) {
+        boolean result = false;
+        try {
+            InputStream in = new FileInputStream(srcFile);
+            try {
+                result = copyToFile(in, destFile);
+            } finally  {
+                in.close();
+            }
+        } catch (IOException e) {
+            result = false;
+        }
+        return result;
+    }
+
     private void migrateToDataFolder() {
         File dbPath = getContext().getDatabasePath(SnapshotDatabaseHelper.DATABASE_NAME);
         if (dbPath.exists()) return;
@@ -125,7 +176,7 @@ public class SnapshotProvider extends ContentProvider {
             // Try to move
             if (!oldPath.renameTo(dbPath)) {
                 // Failed, do a copy
-                FileUtils.copyFile(oldPath, dbPath);
+                copyFile(oldPath, dbPath);
             }
             // Cleanup
             oldPath.delete();

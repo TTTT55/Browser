@@ -1,26 +1,10 @@
-/*
- * Copyright (C) 2006 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.studio.browser.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.os.StrictMode;
+import com.studio.browser.misc.StrictMode;
 import android.util.AttributeSet;
 import android.view.FocusFinder;
 import android.view.InputDevice;
@@ -40,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.OverScroller;
 import android.widget.TextView;
 
-import com.android.internal.R;
+import com.studio.browser.R;
 
 import java.util.List;
 
@@ -71,6 +55,13 @@ public class ScrollerView extends FrameLayout {
 
     private final Rect mTempRect = new Rect();
     protected OverScroller mScroller;
+
+    int mPaddingTop = getPaddingTop();
+    int mPaddingBottom = getPaddingBottom();
+    int mPaddingLeft = getPaddingLeft();
+    int mPaddingRight = getPaddingRight();
+    int mScrollX = getScrollX();
+    int mScrollY = getScrollY();
 
     /**
      * Position of the last motion event.
@@ -158,7 +149,7 @@ public class ScrollerView extends FrameLayout {
     }
 
     public ScrollerView(Context context, AttributeSet attrs) {
-        this(context, attrs, com.android.internal.R.attr.scrollViewStyle);
+        this(context, attrs, R.attr.scrollViewStyle);
     }
 
     public ScrollerView(Context context, AttributeSet attrs, int defStyle) {
@@ -166,7 +157,7 @@ public class ScrollerView extends FrameLayout {
         initScrollView();
 
         TypedArray a =
-            context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ScrollView, defStyle, 0);
+            context.obtainStyledAttributes(attrs, R.styleable.ScrollView, defStyle, 0);
 
         setFillViewport(a.getBoolean(R.styleable.ScrollView_fillViewport, false));
 
@@ -178,7 +169,7 @@ public class ScrollerView extends FrameLayout {
         setFocusable(true);
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
         setWillNotDraw(false);
-        final ViewConfiguration configuration = ViewConfiguration.get(mContext);
+        final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
@@ -204,13 +195,13 @@ public class ScrollerView extends FrameLayout {
         }
         if (mHorizontal) {
             final int length = getHorizontalFadingEdgeLength();
-            if (mScrollX < length) {
-                return mScrollX / (float) length;
+            if (getScrollX() < length) {
+                return getScrollX() / (float) length;
             }
         } else {
             final int length = getVerticalFadingEdgeLength();
-            if (mScrollY < length) {
-                return mScrollY / (float) length;
+            if (getScrollY() < length) {
+                return getScrollY() / (float) length;
             }
         }
         return 1.0f;
@@ -223,15 +214,15 @@ public class ScrollerView extends FrameLayout {
         }
         if (mHorizontal) {
             final int length = getHorizontalFadingEdgeLength();
-            final int bottomEdge = getWidth() - mPaddingRight;
-            final int span = getChildAt(0).getRight() - mScrollX - bottomEdge;
+            final int bottomEdge = getWidth() - getPaddingRight();
+            final int span = getChildAt(0).getRight() - getScrollX() - bottomEdge;
             if (span < length) {
                 return span / (float) length;
             }
         } else {
             final int length = getVerticalFadingEdgeLength();
-            final int bottomEdge = getHeight() - mPaddingBottom;
-            final int span = getChildAt(0).getBottom() - mScrollY - bottomEdge;
+            final int bottomEdge = getHeight() - getPaddingBottom();
+            final int span = getChildAt(0).getBottom() - getScrollY() - bottomEdge;
             if (span < length) {
                 return span / (float) length;
             }
@@ -245,7 +236,7 @@ public class ScrollerView extends FrameLayout {
      */
     public int getMaxScrollAmount() {
         return (int) (MAX_SCROLL_FACTOR * (mHorizontal
-                ? (mRight - mLeft) : (mBottom - mTop)));
+                ? (getRight() - getLeft()) : (getBottom() - getTop())));
     }
 
 
@@ -292,9 +283,9 @@ public class ScrollerView extends FrameLayout {
         View child = getChildAt(0);
         if (child != null) {
             if (mHorizontal) {
-                return getWidth() < child.getWidth() + mPaddingLeft + mPaddingRight;
+                return getWidth() < child.getWidth() + getPaddingLeft() + getPaddingRight();
             } else {
-                return getHeight() < child.getHeight() + mPaddingTop + mPaddingBottom;
+                return getHeight() < child.getHeight() + getPaddingTop() + getPaddingBottom();
             }
         }
         return false;
@@ -803,6 +794,14 @@ public class ScrollerView extends FrameLayout {
         }
     }
 
+    public float getHorizontalScrollFactor() {
+        return this.getHorizontalScrollFactor();
+    }
+
+    public float getVerticalScrollFactor() {
+        return this.getVerticalScrollFactor();
+    }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) != 0) {
@@ -813,7 +812,7 @@ public class ScrollerView extends FrameLayout {
                         final float hscroll = event
                                 .getAxisValue(MotionEvent.AXIS_HSCROLL);
                         if (hscroll != 0) {
-                            final int delta = (int) (hscroll * getHorizontalScrollFactor());
+                            final int delta = (int) (hscroll * getHorizontalScrollFactor() );
                             final int range = getScrollRange();
                             int oldScrollX = mScrollX;
                             int newScrollX = oldScrollX - delta;
@@ -869,7 +868,7 @@ public class ScrollerView extends FrameLayout {
         if (!mScroller.isFinished()) {
             mScrollX = scrollX;
             mScrollY = scrollY;
-            invalidateParentIfNeeded();
+            //invalidateParentIfNeeded();
             if (mHorizontal && clampedX) {
                 mScroller.springBack(mScrollX, mScrollY, 0, getScrollRange(), 0, 0);
             } else if (!mHorizontal && clampedY) {

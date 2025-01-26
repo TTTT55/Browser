@@ -17,14 +17,17 @@ package com.studio.browser;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
-import androidx.core.view.ViewPager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,7 +35,7 @@ import com.studio.browser.UI.ComboViews;
 
 import java.util.ArrayList;
 
-public class ComboViewActivity extends Activity implements CombinedBookmarksCallbacks {
+public class ComboViewActivity extends FragmentActivity implements CombinedBookmarksCallbacks {
 
     private static final String STATE_SELECTED_TAB = "tab";
     public static final String EXTRA_COMBO_ARGS = "combo_args";
@@ -159,10 +162,30 @@ public class ComboViewActivity extends Activity implements CombinedBookmarksCall
      */
     public static class TabsAdapter extends FragmentPagerAdapter
             implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
-        private final Context mContext;
+        private final FragmentActivity mContext;
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+            Object tag = tab.getTag();
+            for (int i=0; i<mTabs.size(); i++) {
+                if (mTabs.get(i) == tag) {
+                    mViewPager.setCurrentItem(i);
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+
+        }
 
         static final class TabInfo {
             private final Class<?> clss;
@@ -174,8 +197,8 @@ public class ComboViewActivity extends Activity implements CombinedBookmarksCall
             }
         }
 
-        public TabsAdapter(Activity activity, ViewPager pager) {
-            super(activity.getFragmentManager());
+        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
+            super(activity.getSupportFragmentManager());
             mContext = activity;
             mActionBar = activity.getActionBar();
             mViewPager = pager;
@@ -214,27 +237,6 @@ public class ComboViewActivity extends Activity implements CombinedBookmarksCall
 
         @Override
         public void onPageScrollStateChanged(int state) {
-        }
-
-        @Override
-        public void onTabSelected(android.app.ActionBar.Tab tab,
-                FragmentTransaction ft) {
-            Object tag = tab.getTag();
-            for (int i=0; i<mTabs.size(); i++) {
-                if (mTabs.get(i) == tag) {
-                    mViewPager.setCurrentItem(i);
-                }
-            }
-        }
-
-        @Override
-        public void onTabUnselected(android.app.ActionBar.Tab tab,
-                FragmentTransaction ft) {
-        }
-
-        @Override
-        public void onTabReselected(android.app.ActionBar.Tab tab,
-                FragmentTransaction ft) {
         }
     }
 

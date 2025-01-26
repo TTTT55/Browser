@@ -24,7 +24,7 @@ import android.preference.PreferenceFragment;
 import com.studio.browser.BrowserSettings;
 import com.studio.browser.GoogleAccountLogin;
 import com.studio.browser.PreferenceKeys;
-import com.android.browser.R;
+import com.studio.browser.R;
 
 public class DebugPreferencesFragment extends PreferenceFragment
         implements OnPreferenceClickListener {

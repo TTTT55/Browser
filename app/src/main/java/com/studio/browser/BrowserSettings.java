@@ -181,8 +181,14 @@ public class BrowserSettings implements OnSharedPreferenceChangeListener,
             // the cost of one cached page is ~3M (measured using nytimes.com). For
             // low end devices, we only cache one page. For high end devices, we try
             // to cache more pages, currently choose 5.
-            if (ActivityManager.staticGetMemoryClass() > 16) {
-                mPageCacheCapacity = 5;
+            ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+            int memoryClass = activityManager.getMemoryClass();
+
+            // Set cache capacity based on memory class
+            if (memoryClass > 16) {
+                mPageCacheCapacity = 5; // High-end devices
+            } else {
+                mPageCacheCapacity = 1; // Low-end devices
             }
             mWebStorageSizeManager = new WebStorageSizeManager(mContext,
                     new WebStorageSizeManager.StatFsDiskInfo(getAppCachePath()),
@@ -250,7 +256,7 @@ public class BrowserSettings implements OnSharedPreferenceChangeListener,
         settings.setGeolocationEnabled(enableGeolocation());
         settings.setJavaScriptEnabled(enableJavascript());
         settings.setLightTouchEnabled(enableLightTouch());
-        settings.setNavDump(enableNavDump());
+        settings.setDomStorageEnabled(true);
         settings.setDefaultTextEncodingName(getDefaultTextEncoding());
         settings.setDefaultZoom(getDefaultZoom());
         settings.setMinimumFontSize(getMinimumFontSize());
@@ -292,13 +298,12 @@ public class BrowserSettings implements OnSharedPreferenceChangeListener,
         settings.setAllowContentAccess(false);
 
         // HTML5 API flags
-        settings.setAppCacheEnabled(true);
+        settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setDomStorageEnabled(true);
 
         // HTML5 configuration parametersettings.
-        settings.setAppCacheMaxSize(getWebStorageSizeManager().getAppCacheMaxSize());
-        settings.setAppCachePath(getAppCachePath());
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         settings.setDatabasePath(mContext.getDir("databases", 0).getPath());
         settings.setGeolocationDatabasePath(mContext.getDir("geolocation", 0).getPath());
         // origin policy for file access
@@ -438,8 +443,8 @@ public class BrowserSettings implements OnSharedPreferenceChangeListener,
 
     public void clearHistory() {
         ContentResolver resolver = mContext.getContentResolver();
-        Browser.clearHistory(resolver);
-        Browser.clearSearches(resolver);
+        com.studio.browser.misc.Browser.clearHistory(resolver);
+        com.studio.browser.misc.Browser.clearSearches(resolver);
     }
 
     public void clearFormData() {

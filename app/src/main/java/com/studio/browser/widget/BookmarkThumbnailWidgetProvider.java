@@ -26,7 +26,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.studio.browser.BrowserActivity;
-import com.android.browser.R;
+import com.studio.browser.R;
 
 /**
  * Widget that shows a preview of the user's bookmarks.

@@ -41,7 +41,7 @@
     <!-- Sign-in dialog -->
     <!-- This is used as the title of a dialog which is used to sign in to a secure site.
             "%s1"is replaced with the host and "%s2" with realm -->
-    <string name="sign_in_to">Sign in to <xliff:g id="hostname">%s1</xliff:g> \"<xliff:g id="realm">%s2</xliff:g>\"</string>
+    <string name="sign_in_to" formatted="false">Sign in to <xliff:g id="hostname">%s1</xliff:g> \"<xliff:g id="realm">%s2</xliff:g>\"</string>
     <!-- Prompt for an input box that allows the user to enter their login name -->
     <string name="username">Name</string>
     <!-- Prompt for an input box that allows the user to enter their password -->
@@ -701,7 +701,7 @@
             error -->
     <string name="browserFrameFileErrorLabel">File problem</string>
     <!-- Dialog box title -->
-    <string name="browserFrameFormResubmitLabel"></string>
+    <string name="browserFrameFormResubmitLabel"> </string>
     <!-- Dialog box message -->
     <string name="browserFrameFormResubmitMessage">The page you\'re trying to view contains data that has already been submitted (\"POSTDATA\"). If you resend the data, any action the form on the page carried out (such as a search or online purchase) will be repeated.</string>
     <!-- Dialog box title -->
@@ -760,24 +760,13 @@
       at a time.</string>
 
     <!-- Download History UI strings -->
-    <!-- Dialog title [CHAR LIMIT=25] -->
-    <string name="download_no_sdcard_dlg_title" product="nosdcard">USB storage unavailable</string>
     <!-- Dialog title -->
     <string name="download_no_sdcard_dlg_title" product="default">No SD card</string>
-    <!-- Dialog message [CHAR LIMIT=NONE] -->
-    <string name="download_no_sdcard_dlg_msg" product="nosdcard">USB storage is required to download <xliff:g id="filename">%s</xliff:g>.</string>
     <!-- Dialog message -->
     <string name="download_no_sdcard_dlg_msg" product="default">An SD card is required to download <xliff:g id="filename">%s</xliff:g>.</string>
     <!-- Title for a dialog informing the user that the SD card used for
-            external storage is busy so they cannot download anything [CHAR LIMIT=25] -->
-    <string name="download_sdcard_busy_dlg_title" product="nosdcard">USB storage unavailable</string>
-    <!-- Title for a dialog informing the user that the SD card used for
             external storage is busy so they cannot download anything -->
     <string name="download_sdcard_busy_dlg_title" product="default">SD card unavailable</string>
-    <!-- Message for a dialog informing the user that the SD card used for
-            external storage is busy so they cannot download anything.  Informs
-            the user how to enable SD card storage [CHAR LIMIT=NONE] -->
-    <string name="download_sdcard_busy_dlg_msg" product="nosdcard">The USB storage is busy. To allow downloads, touch Turn Off USB Storage in the notification.</string>
     <!-- Message for a dialog informing the user that the SD card used for
             external storage is busy so they cannot download anything.  Informs
             the user how to enable SD card storage -->
@@ -854,14 +843,14 @@
 
     <!-- Geolocation -->
     <!-- Permissions prompt -->
-    <string name="permissions_prompt_message"><xliff:g id="website origin" example="maps.google.com">%s</xliff:g> wants to use your <xliff:g id="resources" example="camera, microphone">%s</xliff:g>.</string>
+    <string name="permissions_prompt_message" formatted="false"><xliff:g id="website origin" example="maps.google.com">%s</xliff:g> wants to use your <xliff:g id="resources" example="camera, microphone">%s</xliff:g>.</string>
     <string name="permissions_prompt_allow">Allow</string>
     <string name="permissions_prompt_deny">Deny</string>
     <string name="permissions_prompt_remember">Remember preference</string>
     <string name="resource_protected_media_id">protected media ID</string>
     <string name="resource_video_capture">camera</string>
     <string name="resource_audio_capture">microphone</string>
-    <string name="geolocation_permissions_prompt_message"><xliff:g id="website origin" example="maps.google.com">%s</xliff:g> wants to know your location</string>
+    <string name="geolocation_permissions_prompt_message" formatted="false"><xliff:g id="website origin" example="maps.google.com">%s</xliff:g> wants to know your location</string>
     <string name="geolocation_permissions_prompt_share">Share location</string>
     <string name="geolocation_permissions_prompt_dont_share">Decline</string>
     <string name="geolocation_permissions_prompt_remember">Remember preference</string>
@@ -944,7 +933,7 @@
     <string name="import_bookmarks_dialog_add">Add bookmarks to Google account</string>
 
     <!-- Button allowing users to import all of their existing bookmarks into an account when setting up syncing with their bookmarks stored in Google Chrome [CHAR-LIMIT=64] -->
-    <string name="import_bookmarks_dialog_import">Add your Android bookmarks to bookmarks for <xliff:g id="Google account" example="account@example.com">%s</xliff:g></string>
+    <string name="import_bookmarks_dialog_import" formatted="false">Add your Android bookmarks to bookmarks for <xliff:g id="Google account" example="account@example.com">%s</xliff:g></string>
 
     <!-- Url Selection Action Mode -->
 
@@ -1019,5 +1008,16 @@
     <string name="accessibility_transition_navscreen">Tab management</string>
     <!-- Content description for navigating up in the bookmark folder hierarchy [CHAR LIMIT=NONE] -->
     <string name="accessibility_button_bookmarks_folder_up">Previous folder</string>
-
+    <string name="sendText">Choose an action for text</string>
+    <!-- Prepended to the shortcut for a menu item to indicate that the user should hold the MENU button together with the shortcut to invoke the item. For example, if the shortcut to open a new tab in browser is MENU and B together, then this would be prepended to the letter "B" -->
+    <string name="prepend_shortcut_label">Menu+</string>
+    <!-- Displayed in place of the regular shortcut letter when a menu item has Menu+space for the shortcut. -->
+    <string name="menu_space_shortcut_label">space</string>
+    <!-- Displayed in place of the regular shortcut letter when a menu item has Menu+enter for the shortcut. -->
+    <string name="menu_enter_shortcut_label">enter</string>
+    <!-- Displayed in place of the regular shortcut letter when a menu item has Menu+delete for the shortcut. -->
+    <string name="menu_delete_shortcut_label">delete</string>
+    <string name="ssl_certificate_is_valid">SSL Certificate is valid</string>
+    <string name="ssl_certificate">SSL Certificate</string>
+    <string name="find_on_page">Find on page</string>
 </resources>

@@ -165,24 +165,6 @@ public class PageDialogsHandler {
             .setTitle(R.string.page_info)
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(pageInfoView)
-            .setPositiveButton(
-                R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int whichButton) {
-                        mPageInfoDialog = null;
-                        mPageInfoView = null;
-
-                        // if we came here from the SSL error dialog
-                        if (fromShowSSLCertificateOnError) {
-                            // go back to the SSL error dialog
-                            showSSLCertificateOnError(
-                                mSSLCertificateOnErrorView,
-                                mSSLCertificateOnErrorHandler,
-                                mSSLCertificateOnErrorError);
-                        }
-                    }
-                })
             .setOnCancelListener(
                 new DialogInterface.OnCancelListener() {
                     public void onCancel(DialogInterface dialog) {
@@ -246,16 +228,6 @@ public class PageDialogsHandler {
 
         mSSLCertificateView = tab;
         mSSLCertificateDialog = createSslCertificateDialog(cert, tab.getSslCertificateError())
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int whichButton) {
-                                mSSLCertificateDialog = null;
-                                mSSLCertificateView = null;
-
-                                showPageInfo(tab, false, null);
-                            }
-                        })
                 .setOnCancelListener(
                         new DialogInterface.OnCancelListener() {
                             public void onCancel(DialogInterface dialog) {
@@ -288,19 +260,6 @@ public class PageDialogsHandler {
         mSSLCertificateOnErrorView = view;
         mSSLCertificateOnErrorError = error;
         mSSLCertificateOnErrorDialog = createSslCertificateDialog(cert, error)
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int whichButton) {
-                                mSSLCertificateOnErrorDialog = null;
-                                mSSLCertificateOnErrorView = null;
-                                mSSLCertificateOnErrorHandler = null;
-                                mSSLCertificateOnErrorError = null;
-
-                                ((BrowserWebView) view).getWebViewClient().
-                                        onReceivedSslError(view, handler, error);
-                            }
-                        })
                  .setNeutralButton(R.string.page_info_view,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
@@ -341,9 +300,9 @@ public class PageDialogsHandler {
      */
     private AlertDialog.Builder createSslCertificateDialog(SslCertificate certificate,
             SslError error) {
-        View certificateView = certificate.inflateCertificateView(mContext);
+        View certificateView = null;
         final LinearLayout placeholder =
-                (LinearLayout)certificateView.findViewById(com.android.internal.R.id.placeholder);
+                (LinearLayout)certificateView.findViewById(0);
 
         LayoutInflater factory = LayoutInflater.from(mContext);
         int iconId;
@@ -352,7 +311,7 @@ public class PageDialogsHandler {
             iconId = R.drawable.ic_dialog_browser_certificate_secure;
             LinearLayout table = (LinearLayout)factory.inflate(R.layout.ssl_success, placeholder);
             TextView successString = (TextView)table.findViewById(R.id.success);
-            successString.setText(com.android.internal.R.string.ssl_certificate_is_valid);
+            successString.setText(R.string.ssl_certificate_is_valid);
         } else {
             iconId = R.drawable.ic_dialog_browser_certificate_partially_secure;
             if (error.hasError(SslError.SSL_UNTRUSTED)) {
@@ -384,7 +343,7 @@ public class PageDialogsHandler {
         }
 
         return new AlertDialog.Builder(mContext)
-                .setTitle(com.android.internal.R.string.ssl_certificate)
+                .setTitle(R.string.ssl_certificate)
                 .setIcon(iconId)
                 .setView(certificateView);
     }

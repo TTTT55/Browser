@@ -15,15 +15,15 @@
  */
 package com.studio.browser.search;
 
-import com.android.browser.R;
+import com.studio.browser.R;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
-import libcore.io.Streams;
-import libcore.net.http.ResponseUtils;
+import com.studio.browser.misc.Streams;
+import com.studio.browser.misc.ResponseUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
