@@ -114,7 +114,7 @@ public class NavigationBarTablet extends NavigationBarBase implements UrlInputVi
 
     public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
-        Resources res = mContext.getResources();
+        Resources res = getContext().getResources();
         mHideNavButtons = res.getBoolean(R.bool.hide_nav_buttons);
         if (mUrlInput.hasFocus()) {
             if (mHideNavButtons && (mNavButtons.getVisibility() == View.VISIBLE)) {

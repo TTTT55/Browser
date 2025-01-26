@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="seekBarPreferenceStyle" format="reference" />
+    <!--<attr name="seekBarPreferenceStyle" format="reference" />
     <attr name="seekBar" format="reference" />
     <attr name="autoCompleteTextViewStyle" format="reference" />
     <declare-styleable name="SeekBarPreference">
         <attr name="layout" />
     </declare-styleable>
     <declare-styleable name="ProgressBar">
-        <!-- Defines the maximum value the progress can take. -->
         <attr name="max" format="integer" />
     </declare-styleable>
-    <!-- Default style for YesNoPreference. -->
     <attr name="yesNoPreferenceStyle" format="reference" />
     <declare-styleable name="ScrollView">
-        <!-- Defines whether the scrollview should stretch its content to fill the viewport. -->
         <attr name="fillViewport" format="boolean" />
     </declare-styleable>
     <attr name="scrollViewStyle" format="reference" />
     <declare-styleable name="Theme">
-        <!-- Drawable to use for generic vertical dividers. -->
         <attr name="dividerVertical" format="reference" />
     </declare-styleable>
     <attr name="actionBarSize" format="dimension" >
@@ -26,17 +22,16 @@
     </attr>
     <attr name="preferenceFrameLayoutStyle" format="reference" />
     <declare-styleable name="PreferenceFrameLayout">
-        <!-- Padding to use at the top of the prefs content. -->
         <attr name="borderTop" format="dimension" />
-        <!-- Padding to use at the bottom of the prefs content. -->
         <attr name="borderBottom" format="dimension" />
-        <!-- Padding to use at the left of the prefs content. -->
         <attr name="borderLeft" format="dimension" />
-        <!-- Padding to use at the right of the prefs content. -->
         <attr name="borderRight" format="dimension" />
     </declare-styleable>
     <declare-styleable name="PreferenceFrameLayout_Layout">
-        <!-- Padding to use at the top of the prefs content. -->
         <attr name="layout_removeBorders" format="boolean" />
+    </declare-styleable>-->
+    <declare-styleable name="ScrollView">
+        <attr name="fillViewport" format="boolean" />
     </declare-styleable>
+    <attr name="scrollViewStyle" format="reference" />
 </resources>

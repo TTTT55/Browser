@@ -26,7 +26,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.webkit.CookieManager;

@@ -79,7 +79,7 @@ public class UrlInputView extends androidx.appcompat.widget.AppCompatAutoComplet
     }
 
     public UrlInputView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.autoCompleteTextViewStyle);
+        this(context, attrs, 0/*R.attr.autoCompleteTextViewStyle*/);
     }
 
     public UrlInputView(Context context) {
@@ -197,7 +197,7 @@ public class UrlInputView extends androidx.appcompat.widget.AppCompatAutoComplet
     @Override
     public void dismissDropDown() {
         super.dismissDropDown();
-        mAdapter.clearCache();
+        //mAdapter.clearCache();
     }
 
     @Override

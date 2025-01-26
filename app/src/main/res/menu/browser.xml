@@ -10,6 +10,14 @@
             android:alphabeticShortcut="n"
             app:showAsAction="never" />
         <item
+            android:id="@+id/stop_reload_menu_id"
+            android:alphabeticShortcut="r"
+            android:title="Stop" />
+        <item
+            android:id="@+id/forward_menu_id"
+            android:title="@string/forward"
+            android:icon="@drawable/ic_menu_forward" />
+        <item
             android:id="@+id/bookmarks_menu_id"
             android:title="@string/bookmarks"
             android:icon="@drawable/ic_bookmarks_holo_dark"
@@ -33,6 +41,31 @@
             android:id="@+id/dump_nav_menu_id"
             android:title="@string/dump_nav"
             android:visible="false" />
+        <item
+            android:id="@+id/share_page_menu_id"
+            android:title="@string/share_page"
+            android:icon="@drawable/ic_share_holo_dark"
+            android:alphabeticShortcut="s" />
+        <item
+            android:id="@+id/find_menu_id"
+            android:title="@string/find_on_page"/>
+        <item
+            android:id="@+id/ua_desktop_menu_id"
+            android:checkable="true"
+            android:title="@string/ua_switcher_desktop" />
+        <item
+            android:id="@+id/snapshot_go_live"
+            android:title="@string/snapshot_go_live" />
+        <item
+            android:id="@+id/close_other_tabs_id"
+            android:title="@string/close_other_tabs" />
+        <item
+            android:id="@+id/history_menu_id"
+            android:title="@string/tab_history"
+            android:alphabeticShortcut="h" />
+        <item
+            android:id="@+id/snapshots_menu_id"
+            android:title="@string/tab_snapshots" />
     </group>
     <group android:id="@+id/MAIN_SHORTCUT_MENU" android:visible="false"
         tools:ignore="MenuTitle">

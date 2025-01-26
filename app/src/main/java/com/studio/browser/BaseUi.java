@@ -16,6 +16,7 @@
 
 package com.studio.browser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -822,6 +823,7 @@ public abstract class BaseUi implements UI {
 
     protected Handler mHandler = new Handler() {
 
+        @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_HIDE_TITLEBAR) {

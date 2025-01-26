@@ -38,15 +38,13 @@ public class UrlSelectionActionMode implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.share:
-                mUiController.shareCurrentPage();
-                mode.finish();
-                break;
-            default:
-                return false;
+        if (item.getItemId() == R.id.share) {
+            mUiController.shareCurrentPage();
+            mode.finish();
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     @Override

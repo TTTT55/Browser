@@ -25,9 +25,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference</item>
+        <!--<item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference</item>-->
         <item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.AutoCompleteTextView</item>
-        <item name="android:yesNoPreferenceStyle">@style/YesNoPreference</item>
+        <!--<item name="yesNoPreferenceStyle">@style/YesNoPreference</item>-->
     </style>
     <style name="DialogWhenLarge" parent="@android:style/Theme.Holo.DialogWhenLarge" >
         <item name="android:windowActionBar">false</item>

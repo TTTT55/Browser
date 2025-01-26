@@ -37,7 +37,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.misc.BrowserContract.Combined;
 import android.view.ContextMenu;

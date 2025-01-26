@@ -52,7 +52,7 @@ public class NfcHandler implements NfcAdapter.CreateNdefMessageCallback {
             handler = new NfcHandler(controller);
         }
 
-        adapter.setNdefPushMessageCallback(handler, activity);
+        //adapter.setNdefPushMessageCallback(handler, activity); // Hidden API
     }
 
     public static void unregister(Activity activity) {

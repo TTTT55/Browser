@@ -63,10 +63,9 @@ public class ShortcutActivity extends Activity
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.cancel:
+        int id = v.getId();
+        if (id == R.id.cancel) {
             finish();
-            break;
         }
     }
 }

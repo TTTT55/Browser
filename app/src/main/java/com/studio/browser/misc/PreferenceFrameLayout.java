@@ -22,7 +22,7 @@ public class PreferenceFrameLayout extends FrameLayout {
         this(context, null);
     }
     public PreferenceFrameLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.preferenceFrameLayoutStyle);
+        this(context, attrs, 0/*R.attr.preferenceFrameLayoutStyle*/);
     }
     public PreferenceFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
@@ -31,23 +31,23 @@ public class PreferenceFrameLayout extends FrameLayout {
             Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         final TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.PreferenceFrameLayout, defStyleAttr, defStyleRes);
+                null/*R.styleable.PreferenceFrameLayout*/, defStyleAttr, defStyleRes);
         float density = context.getResources().getDisplayMetrics().density;
         int defaultBorderTop = (int) (density * DEFAULT_BORDER_TOP + 0.5f);
         int defaultBottomPadding = (int) (density * DEFAULT_BORDER_BOTTOM + 0.5f);
         int defaultLeftPadding = (int) (density * DEFAULT_BORDER_LEFT + 0.5f);
         int defaultRightPadding = (int) (density * DEFAULT_BORDER_RIGHT + 0.5f);
         mBorderTop = a.getDimensionPixelSize(
-                R.styleable.PreferenceFrameLayout_borderTop,
+                0/*R.styleable.PreferenceFrameLayout_borderTop*/,
                 defaultBorderTop);
         mBorderBottom = a.getDimensionPixelSize(
-                R.styleable.PreferenceFrameLayout_borderBottom,
+                0/*R.styleable.PreferenceFrameLayout_borderBottom*/,
                 defaultBottomPadding);
         mBorderLeft = a.getDimensionPixelSize(
-                R.styleable.PreferenceFrameLayout_borderLeft,
+                0/*R.styleable.PreferenceFrameLayout_borderLeft*/,
                 defaultLeftPadding);
         mBorderRight = a.getDimensionPixelSize(
-                R.styleable.PreferenceFrameLayout_borderRight,
+                0/*R.styleable.PreferenceFrameLayout_borderRight*/,
                 defaultRightPadding);
         a.recycle();
     }
@@ -105,9 +105,9 @@ public class PreferenceFrameLayout extends FrameLayout {
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
             TypedArray a = c.obtainStyledAttributes(attrs,
-                    R.styleable.PreferenceFrameLayout_Layout);
+                    null/*R.styleable.PreferenceFrameLayout_Layout*/);
             removeBorders = a.getBoolean(
-                    R.styleable.PreferenceFrameLayout_Layout_layout_removeBorders,
+                    0/*R.styleable.PreferenceFrameLayout_Layout_layout_removeBorders*/,
                     false);
             a.recycle();
         }

@@ -18,7 +18,7 @@
 package com.studio.browser;
 
 import android.content.Context;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;

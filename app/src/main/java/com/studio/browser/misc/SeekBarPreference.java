@@ -24,7 +24,7 @@ public class SeekBarPreference extends Preference
             Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
-        TypedArray a = context.obtainStyledAttributes(
+        /*TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.ProgressBar, defStyleAttr, defStyleRes);
         setMax(a.getInt(R.styleable.ProgressBar_max, mMax));
         a.recycle();
@@ -34,9 +34,9 @@ public class SeekBarPreference extends Preference
         final int layoutResId = a.getResourceId(
                 R.styleable.SeekBarPreference_layout,
                 R.layout.preference_widget_seekbar);
-        a.recycle();
+        a.recycle();*/
 
-        setLayoutResource(layoutResId);
+        setLayoutResource(R.layout.preference_widget_seekbar);
     }
 
     public SeekBarPreference(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -44,7 +44,7 @@ public class SeekBarPreference extends Preference
     }
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.seekBarPreferenceStyle);
+        this(context, attrs, 0/*R.attr.seekBarPreferenceStyle*/);
     }
 
     public SeekBarPreference(Context context) {

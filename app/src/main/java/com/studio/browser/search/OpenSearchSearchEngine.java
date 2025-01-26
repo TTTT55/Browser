@@ -36,7 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import android.text.TextUtils;
 import android.util.Log;
 

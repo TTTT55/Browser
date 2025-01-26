@@ -65,7 +65,7 @@ public class PhoneUi extends BaseUi {
         mNavigationBar = (NavigationBarPhone) mTitleBar.getNavigationBar();
         TypedValue heightValue = new TypedValue();
         browser.getTheme().resolveAttribute(
-                R.attr.actionBarSize, heightValue, true);
+                0/*R.attr.actionBarSize*/, heightValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(heightValue.data,
                 browser.getResources().getDisplayMetrics());
     }
@@ -195,10 +195,10 @@ public class PhoneUi extends BaseUi {
             closeOthers.setEnabled(!isLastTab);
         }
         if (showingNavScreen()) {
-            menu.setGroupVisible(R.id.LIVE_MENU, false);
-            menu.setGroupVisible(R.id.SNAPSHOT_MENU, false);
-            menu.setGroupVisible(R.id.NAV_MENU, false);
-            menu.setGroupVisible(R.id.COMBO_MENU, true);
+            //menu.setGroupVisible(R.id.LIVE_MENU, false);
+            //menu.setGroupVisible(R.id.SNAPSHOT_MENU, false);
+            //menu.setGroupVisible(R.id.NAV_MENU, false);
+            //menu.setGroupVisible(R.id.COMBO_MENU, true);
         }
     }
 

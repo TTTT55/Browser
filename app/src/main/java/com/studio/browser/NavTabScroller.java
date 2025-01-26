@@ -100,6 +100,9 @@ public class NavTabScroller extends ScrollerView {
                 * MIN_VELOCITY;
     }
 
+    int mScrollX = getScrollX();
+    int mScrollY = getScrollY();
+
     protected int getScrollValue() {
         return mHorizontal ? mScrollX : mScrollY;
     }

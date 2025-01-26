@@ -49,7 +49,7 @@ public class Browser {
      * same window each time the application launches the Browser with the same
      * identifier.
      */
-    public static final String EXTRA_APPLICATION_ID = "com.android.browser.application_id";
+    public static final String EXTRA_APPLICATION_ID = "com.studio.browser.application_id";
 
     /**
      * The name of the extra data in the VIEW intent. The data are key/value
@@ -58,7 +58,7 @@ public class Browser {
      * as they are set by the WebView. The url's schema must be http(s).
      * <p>
      */
-    public static final String EXTRA_HEADERS = "com.android.browser.headers";
+    public static final String EXTRA_HEADERS = "com.studio.browser.headers";
 
     /** @removed if you change column order you must also change indices below */
     public static final String[] HISTORY_PROJECTION = new String[] {

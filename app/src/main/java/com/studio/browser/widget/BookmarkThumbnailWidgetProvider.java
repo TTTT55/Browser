@@ -33,7 +33,7 @@ import com.studio.browser.R;
  */
 public class BookmarkThumbnailWidgetProvider extends AppWidgetProvider {
     public static final String ACTION_BOOKMARK_APPWIDGET_UPDATE =
-        "com.android.browser.BOOKMARK_APPWIDGET_UPDATE";
+        "com.studio.browser.BOOKMARK_APPWIDGET_UPDATE";
 
     @Override
     public void onReceive(Context context, Intent intent) {

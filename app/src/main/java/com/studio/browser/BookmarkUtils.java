@@ -37,7 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.net.Uri;
 import android.os.Message;
-import android.provider.Browser;
+import com.studio.browser.misc.Browser;
 import com.studio.browser.misc.BrowserContract;
 
 import com.studio.browser.misc.BrowserContract;

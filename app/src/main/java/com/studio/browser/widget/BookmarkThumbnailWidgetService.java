@@ -50,7 +50,7 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
 
     static final String TAG = "BookmarkThumbnailWidgetService";
     static final String ACTION_CHANGE_FOLDER
-            = "com.android.browser.widget.CHANGE_FOLDER";
+            = "com.studio.browser.widget.CHANGE_FOLDER";
 
     static final String STATE_CURRENT_FOLDER = "current_folder";
     static final String STATE_ROOT_FOLDER = "root_folder";
@@ -262,7 +262,7 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
                 options.inPreferredConfig = Config.ARGB_8888;
                 Bitmap thumbnail = null, favicon = null;
                 byte[] blob = mBookmarks.getBlob(BOOKMARK_INDEX_THUMBNAIL);
-                views.setDrawableParameters(R.id.thumb, true, 255, -1, null, -1);
+                //views.setDrawableParameters(R.id.thumb, true, 255, -1, null, -1);
                 if (blob != null && blob.length > 0) {
                     thumbnail = BitmapFactory.decodeByteArray(
                             blob, 0, blob.length, options);
