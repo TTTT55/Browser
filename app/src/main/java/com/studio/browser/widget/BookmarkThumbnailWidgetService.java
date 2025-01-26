@@ -89,7 +89,7 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
     }
 
     static void deleteWidgetState(Context context, int widgetId) {
-        File file = context.getSharedPrefsFile(
+        File file = getSharedPrefsFile(
                 String.format("widgetState-%d", widgetId));
         if (file.exists()) {
             if (!file.delete()) {
@@ -121,7 +121,7 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
      *  Checks for any state files that may have not received onDeleted
      */
     static void removeOrphanedStates(Context context, int[] widgetIds) {
-        File prefsDirectory = context.getSharedPrefsFile("null").getParentFile();
+        File prefsDirectory = getSharedPrefsFile("null").getParentFile();
         File[] widgetStates = prefsDirectory.listFiles(new StateFilter(widgetIds));
         if (widgetStates != null) {
             for (File f : widgetStates) {
@@ -131,6 +131,14 @@ public class BookmarkThumbnailWidgetService extends RemoteViewsService {
                 }
             }
         }
+    }
+
+    public static File getSharedPreferencesPath(String name) {
+        return null;
+    }
+
+    public static File getSharedPrefsFile(String name) {
+        return getSharedPreferencesPath(name);
     }
 
     static class StateFilter implements FilenameFilter {
