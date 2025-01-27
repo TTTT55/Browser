@@ -42,6 +42,8 @@ public class PhoneUi extends BaseUi {
 
     boolean mAnimating;
     boolean mShowNav = false;
+    private int screenWidth;
+    private int screenHeight;
 
     /**
      * @param browser
@@ -56,6 +58,11 @@ public class PhoneUi extends BaseUi {
                 0/*R.attr.actionBarSize*/, heightValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(heightValue.data,
                 browser.getResources().getDisplayMetrics());
+        WindowManager wm = (WindowManager) browser.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
     }
 
     @Override
@@ -365,8 +372,7 @@ public class PhoneUi extends BaseUi {
         if (mAnimScreen.mMain.getParent() == null) {
             mCustomViewContainer.addView(mAnimScreen.mMain, COVER_SCREEN_PARAMS);
         }
-        mAnimScreen.mMain.layout(0, 0, mContentView.getWidth(),
-                mContentView.getHeight());
+        mAnimScreen.mMain.layout(0, 0, screenWidth, screenHeight);
         mNavScreen.mScroller.finishScroller();
         ImageView target = tabview.mImage;
         int toLeft = 0;
