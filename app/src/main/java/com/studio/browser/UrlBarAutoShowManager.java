@@ -16,6 +16,7 @@
 package com.studio.browser;
 
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -144,17 +145,22 @@ public class UrlBarAutoShowManager implements OnTouchListener,
 
     public int getTitleHeight(WebView webView) {
         final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
-
-        // Use evaluateJavascript to get the height of the title element
         webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String height) {
-                if (height != null) {
-                    titleHeight[0] = Integer.parseInt(height);
+                try {
+                    if (height != null && !height.isEmpty() && !height.equals("null")) {
+                        titleHeight[0] = Integer.parseInt(height);
+                    } else {
+                        Log.e("getTitleHeight", "Invalid height value: " + height);
+                        titleHeight[0] = 0; // Default value
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("getTitleHeight", "Error parsing height: " + height, e);
+                    titleHeight[0] = 0; // Default value
                 }
             }
         });
-
         // Return the height (this will be 0 if the callback hasn't executed yet)
         return titleHeight[0];
     }

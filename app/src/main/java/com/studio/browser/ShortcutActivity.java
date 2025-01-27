@@ -23,7 +23,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class ShortcutActivity extends Activity
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ShortcutActivity extends AppCompatActivity
     implements BookmarksPageCallbacks, OnClickListener {
 
     private BrowserBookmarksPage mBookmarks;
@@ -33,8 +35,7 @@ public class ShortcutActivity extends Activity
         super.onCreate(savedInstanceState);
         setTitle(R.string.shortcut_bookmark_title);
         setContentView(R.layout.pick_bookmark);
-        mBookmarks = (BrowserBookmarksPage) getFragmentManager()
-                .findFragmentById(R.id.bookmarks);
+        mBookmarks = (BrowserBookmarksPage) getSupportFragmentManager().findFragmentById(R.id.bookmarks);
         mBookmarks.setEnableContextMenu(false);
         mBookmarks.setCallbackListener(this);
         View cancel = findViewById(R.id.cancel);

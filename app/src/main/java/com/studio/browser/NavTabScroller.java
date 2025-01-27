@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.studio.browser;
 
 
@@ -100,11 +84,11 @@ public class NavTabScroller extends ScrollerView {
                 * MIN_VELOCITY;
     }
 
-    int mScrollX = getScrollX();
-    int mScrollY = getScrollY();
+    //int mScrollX = getScrollX();
+    //int mScrollY = getScrollY();
 
     protected int getScrollValue() {
-        return mHorizontal ? mScrollX : mScrollY;
+        return mHorizontal ? getScrollX() : getScrollY();
     }
 
     protected void setScrollValue(int value) {
@@ -186,7 +170,7 @@ public class NavTabScroller extends ScrollerView {
     }
 
     protected int getRelativeChildTop(int ix) {
-        return mContentView.getChildAt(ix).getTop() - mScrollY;
+        return mContentView.getChildAt(ix).getTop() - getScrollX();
     }
 
     protected void handleDataChanged() {
@@ -252,7 +236,7 @@ public class NavTabScroller extends ScrollerView {
         } else {
             sy = (v.getTop() + v.getBottom() - getHeight()) / 2;
         }
-        if ((sx != mScrollX) || (sy != mScrollY)) {
+        if ((sx != getScrollX()) || (sy != getScrollY())) {
             if (smooth) {
                 smoothScrollTo(sx,sy);
             } else {
@@ -416,8 +400,8 @@ public class NavTabScroller extends ScrollerView {
 
     @Override
     protected View findViewAt(int x, int y) {
-        x += mScrollX;
-        y += mScrollY;
+        x += getScrollX();
+        y += getScrollY();
         final int count = mContentView.getChildCount();
         for (int i = count - 1; i >= 0; i--) {
             View child = mContentView.getChildAt(i);

@@ -63,6 +63,8 @@ public class ScrollerView extends FrameLayout {
     int mScrollX = getScrollX();
     int mScrollY = getScrollY();
 
+    private boolean isUserScrolling = false;
+
     /**
      * Position of the last motion event.
      */
@@ -546,6 +548,7 @@ public class ScrollerView extends FrameLayout {
         }
 
         case MotionEvent.ACTION_DOWN: {
+            isUserScrolling = true;
             final float y = mHorizontal ? ev.getX() : ev.getY();
             mDownCoords.x = ev.getX();
             mDownCoords.y = ev.getY();
@@ -687,6 +690,7 @@ public class ScrollerView extends FrameLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                isUserScrolling = false;
                 final VelocityTracker vtracker = mVelocityTracker;
                 vtracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 if (isOrthoMove(vtracker.getXVelocity(mActivePointerId),

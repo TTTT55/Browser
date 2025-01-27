@@ -1529,7 +1529,7 @@ public class Controller
             dest.setTitle(source.getTitle());
             dest.setIcon(source.getIcon());
         }
-        //menu.setGroupVisible(R.id.NAV_MENU, isLive);
+        menu.setGroupVisible(R.id.NAV_MENU, isLive);
 
         // decide whether to show the share link option
         PackageManager pm = mActivity.getPackageManager();
@@ -1547,9 +1547,9 @@ public class Controller
         boolean showDebugSettings = mSettings.isDebugEnabled();
         final MenuItem uaSwitcher = menu.findItem(R.id.ua_desktop_menu_id);
         uaSwitcher.setChecked(isDesktopUa);
-        //menu.setGroupVisible(R.id.LIVE_MENU, isLive);
-        //menu.setGroupVisible(R.id.SNAPSHOT_MENU, !isLive);
-        //menu.setGroupVisible(R.id.COMBO_MENU, false);
+        menu.setGroupVisible(R.id.LIVE_MENU, isLive);
+        menu.setGroupVisible(R.id.SNAPSHOT_MENU, !isLive);
+        menu.setGroupVisible(R.id.COMBO_MENU, false);
 
         mUi.updateMenuState(tab, menu);
     }
@@ -2014,6 +2014,7 @@ public class Controller
 
         final ContentResolver cr = mActivity.getContentResolver();
         new AsyncTask<Void, Void, Void>() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             protected Void doInBackground(Void... unused) {
                 Cursor cursor = null;

@@ -17,7 +17,7 @@
 package com.studio.browser;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
 import android.net.Uri;
 import com.studio.browser.misc.BrowserContract.Bookmarks;
 

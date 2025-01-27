@@ -1,31 +1,18 @@
-/*
- * Copyright (C) 2006 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.studio.browser;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
+import androidx.loader.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -98,10 +85,11 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
     HashMap<Integer, BrowserBookmarksAdapter> mBookmarkAdapters = new HashMap<Integer, BrowserBookmarksAdapter>();
     JSONObject mState;
 
+    @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         if (id == LOADER_ACCOUNTS) {
-            return new AccountsLoader(getActivity());
+            return new AccountsLoader(requireActivity());
         } else if (id >= LOADER_BOOKMARKS) {
             String accountType = args.getString(ACCOUNT_TYPE);
             String accountName = args.getString(ACCOUNT_NAME);
@@ -114,7 +102,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         if (loader.getId() == LOADER_ACCOUNTS) {
             LoaderManager lm = getLoaderManager();
             int id = LOADER_BOOKMARKS;
@@ -151,7 +139,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         if (loader.getId() >= LOADER_BOOKMARKS) {
             BrowserBookmarksAdapter adapter = mBookmarkAdapters.get(loader.getId());
             adapter.changeCursor(null);
@@ -310,7 +298,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
      *  Create a new BrowserBookmarksPage.
      */
     @Override
-    public void onCreate(Bundle icicle) {
+    public void onCreate(@Nullable Bundle icicle) {
         super.onCreate(icicle);
         SharedPreferences prefs = BrowserSettings.getInstance().getPreferences();
         try {
@@ -370,7 +358,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.bookmarks, container, false);
         mEmptyView = mRoot.findViewById(android.R.id.empty);

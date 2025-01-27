@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2010 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.studio.browser;
 
 import android.animation.Animator;
@@ -195,10 +179,10 @@ public class PhoneUi extends BaseUi {
             closeOthers.setEnabled(!isLastTab);
         }
         if (showingNavScreen()) {
-            //menu.setGroupVisible(R.id.LIVE_MENU, false);
-            //menu.setGroupVisible(R.id.SNAPSHOT_MENU, false);
-            //menu.setGroupVisible(R.id.NAV_MENU, false);
-            //menu.setGroupVisible(R.id.COMBO_MENU, true);
+            menu.setGroupVisible(R.id.LIVE_MENU, false);
+            menu.setGroupVisible(R.id.SNAPSHOT_MENU, false);
+            menu.setGroupVisible(R.id.NAV_MENU, false);
+            menu.setGroupVisible(R.id.COMBO_MENU, true);
         }
     }
 
@@ -340,13 +324,19 @@ public class PhoneUi extends BaseUi {
 
     public int getTitleHeight(WebView webView) {
         final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
-
-        // Use evaluateJavascript to get the height of the title element
         webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String height) {
-                if (height != null) {
-                    titleHeight[0] = Integer.parseInt(height);
+                try {
+                    if (height != null && !height.isEmpty() && !height.equals("null")) {
+                        titleHeight[0] = Integer.parseInt(height);
+                    } else {
+                        Log.e("getTitleHeight", "Invalid height value: " + height);
+                        titleHeight[0] = 0; // Default value
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("getTitleHeight", "Error parsing height: " + height, e);
+                    titleHeight[0] = 0; // Default value
                 }
             }
         });
