@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
@@ -18,7 +19,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -323,25 +327,7 @@ public class PhoneUi extends BaseUi {
     }
 
     public int getTitleHeight(WebView webView) {
-        final int[] titleHeight = {0}; // Use an array to modify the value inside the callback
-        webView.evaluateJavascript("document.getElementById('titleElementId').offsetHeight", new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String height) {
-                try {
-                    if (height != null && !height.isEmpty() && !height.equals("null")) {
-                        titleHeight[0] = Integer.parseInt(height);
-                    } else {
-                        Log.e("getTitleHeight", "Invalid height value: " + height);
-                        titleHeight[0] = 0; // Default value
-                    }
-                } catch (NumberFormatException e) {
-                    Log.e("getTitleHeight", "Error parsing height: " + height, e);
-                    titleHeight[0] = 0; // Default value
-                }
-            }
-        });
-        // Return the height (this will be 0 if the callback hasn't executed yet)
-        return titleHeight[0];
+        return (int) webView.getResources().getDimension(R.dimen.toolbar_height);
     }
 
     void hideNavScreen(int position, boolean animate) {

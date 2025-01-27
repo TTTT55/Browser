@@ -34,4 +34,5 @@
         <attr name="fillViewport" format="boolean" />
     </declare-styleable>
     <attr name="scrollViewStyle" format="reference" />
+    <attr name="yesNoPreferenceStyle" format="reference" />
 </resources>

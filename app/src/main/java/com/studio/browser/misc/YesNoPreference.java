@@ -6,6 +6,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.TextView;
 
 import com.studio.browser.R;
 
@@ -27,12 +30,23 @@ public class YesNoPreference extends DialogPreference {
     }
 
     public YesNoPreference(Context context, AttributeSet attrs) {
-        this(context, attrs, 0/*R.attr.yesNoPreferenceStyle*/);
+        this(context, attrs, R.attr.yesNoPreferenceStyle);
     }
 
     public YesNoPreference(Context context) {
         this(context, null);
     }
+
+    @Override
+    protected void onBindView(View view) {
+        super.onBindView(view);
+        // Find the title TextView and adjust its size
+        TextView titleView = view.findViewById(android.R.id.title);
+        if (titleView != null) {
+            titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16); // Material2 size
+        }
+    }
+
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {

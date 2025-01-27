@@ -151,7 +151,7 @@ public class NavScreen extends RelativeLayout
     }
 
     private void openNewTab() {
-        // need to call openTab explicitly with set active false
+        // need to call openTab explicitely with setactive false
         final Tab tab = mUiController.openTab(BrowserSettings.getInstance().getHomePage(),
                 false, false, false);
         if (tab != null) {
