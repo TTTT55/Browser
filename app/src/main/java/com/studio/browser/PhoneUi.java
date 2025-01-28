@@ -19,11 +19,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.animation.DecelerateInterpolator;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
@@ -44,6 +41,7 @@ public class PhoneUi extends BaseUi {
     boolean mShowNav = false;
     private int screenWidth;
     private int screenHeight;
+    private WindowManager wm;
 
     /**
      * @param browser
@@ -58,7 +56,7 @@ public class PhoneUi extends BaseUi {
                 0/*R.attr.actionBarSize*/, heightValue, true);
         mActionBarHeight = TypedValue.complexToDimensionPixelSize(heightValue.data,
                 browser.getResources().getDisplayMetrics());
-        WindowManager wm = (WindowManager) browser.getSystemService(Context.WINDOW_SERVICE);
+        wm = (WindowManager) browser.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
@@ -533,5 +531,4 @@ public class PhoneUi extends BaseUi {
         }
 
     }
-
 }

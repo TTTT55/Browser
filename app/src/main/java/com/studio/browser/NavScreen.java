@@ -1,5 +1,6 @@
 package com.studio.browser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -53,6 +55,8 @@ public class NavScreen extends RelativeLayout
     boolean mNeedsMenu;
     HashMap<Tab, View> mTabViews;
 
+    private WindowManager wm;
+
     public NavScreen(Activity activity, UiController ctl, PhoneUi ui) {
         super(activity);
         mActivity = activity;
@@ -60,6 +64,8 @@ public class NavScreen extends RelativeLayout
         mUi = ui;
         mOrientation = activity.getResources().getConfiguration().orientation;
         init();
+
+        wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
     }
 
     protected void showMenu() {
@@ -213,6 +219,7 @@ public class NavScreen extends RelativeLayout
             return position;
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final NavTabView tabview = new NavTabView(mActivity);
@@ -238,7 +245,6 @@ public class NavScreen extends RelativeLayout
             });
             return tabview;
         }
-
     }
 
     @Override
@@ -248,5 +254,4 @@ public class NavScreen extends RelativeLayout
             v.invalidate();
         }
     }
-
 }

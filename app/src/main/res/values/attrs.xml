@@ -35,4 +35,7 @@
     </declare-styleable>
     <attr name="scrollViewStyle" format="reference" />
     <attr name="yesNoPreferenceStyle" format="reference" />
+    <declare-styleable name="MenuView">
+        <attr name="preserveIconSpacing" format="boolean" />
+    </declare-styleable>
 </resources>

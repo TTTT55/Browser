@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2009 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.studio.browser;
 
 import android.content.ContentResolver;
@@ -33,8 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebIconDatabase;
 import android.widget.Toast;
-
-import com.studio.browser.misc.BrowserContract;
 
 import java.io.ByteArrayOutputStream;
 
@@ -63,7 +45,7 @@ public class Bookmarks {
      *  @param url URL of the website to be bookmarked.
      *  @param name Provided name for the bookmark.
      *  @param thumbnail A thumbnail for the bookmark.
-     *  @param retainIcon Whether to retain the page's icon in the icon database.
+     *  Whether to retain the page's icon in the icon database.
      *          This will usually be <code>true</code> except when bookmarks are
      *          added by a settings restore agent.
      *  @param parent ID of the parent folder.

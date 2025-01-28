@@ -1021,4 +1021,7 @@
     <string name="ssl_certificate">SSL Certificate</string>
     <string name="find_on_page">Find on page</string>
     <string name="pref_privacy_privacy_title">Privacy</string>
+    <string name="could_not_create_shortcut">Could not create shortcut</string>
+    <string name="shortcut_created">Shortcut added to home screen</string>
+    <string name="shortcut_already_exists">Shortcut already exists</string>
 </resources>

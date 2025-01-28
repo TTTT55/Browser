@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.misc.BrowserContract.Accounts;
+
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -36,7 +37,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 
-import com.studio.browser.misc.BrowserContract;
 import com.studio.browser.provider.BrowserProvider2;
 import com.studio.browser.view.BookmarkExpandableView;
 
@@ -163,8 +163,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
         return super.onContextItemSelected(item);
     }
 
-    public boolean handleContextItem(int itemId, int groupPosition,
-            int childPosition) {
+    public boolean handleContextItem(int itemId, int groupPosition, int childPosition) {
         final Activity activity = getActivity();
         BrowserBookmarksAdapter adapter = getChildAdapter(groupPosition);
 
@@ -174,7 +173,12 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
             editBookmark(adapter, childPosition);
         } else if (itemId == R.id.shortcut_context_menu_id) {
             Cursor c = adapter.getItem(childPosition);
-            activity.sendBroadcast(createShortcutIntent(getActivity(), c));
+            Intent shortcutIntent = createShortcutIntent(getActivity(), c);
+            if (shortcutIntent != null) {
+                activity.sendBroadcast(shortcutIntent);
+            } else {
+                // Handled by BookmarkUtils class
+            }
         } else if (itemId == R.id.delete_context_menu_id) {
             displayRemoveBookmarkDialog(adapter, childPosition);
         } else if (itemId == R.id.new_window_context_menu_id) {
@@ -202,6 +206,7 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
         }
         return true;
     }
+
 
     static Bitmap getBitmap(Cursor cursor, int columnIndex) {
         return getBitmap(cursor, columnIndex, null);
@@ -268,6 +273,21 @@ public class BrowserBookmarksPage extends Fragment implements View.OnCreateConte
         int count = menu.size();
         for (int i = 0; i < count; i++) {
             menu.getItem(i).setOnMenuItemClickListener(mContextItemClickListener);
+        }
+
+        // Don't rely on MenuInfo, instead store the position information directly
+        // with the menu items when creating them. This way clicks on the menu items
+        // work without the use of ContextMenuBuilder in @BookmarkExpandableView
+        final int groupPos = info.groupPosition;
+        final int childPos = info.childPosition;
+        for (int i = 0; i < count; i++) {
+            MenuItem item = menu.getItem(i);
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                    return handleContextItem(menuItem.getItemId(), groupPos, childPos);
+                }
+            });
         }
     }
 

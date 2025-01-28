@@ -19,6 +19,7 @@ package com.studio.browser;
 import com.studio.browser.addbookmark.FolderSpinner;
 import com.studio.browser.addbookmark.FolderSpinnerAdapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -802,6 +803,7 @@ public class AddBookmarkPage extends Activity
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private void createHandler() {
         if (mHandler == null) {
             mHandler = new Handler() {

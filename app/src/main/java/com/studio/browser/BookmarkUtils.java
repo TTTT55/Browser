@@ -1,27 +1,16 @@
-/*
- * Copyright (C) 2010 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.studio.browser;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -34,13 +23,20 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.graphics.drawable.PaintDrawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+
 import com.studio.browser.misc.Browser;
 import com.studio.browser.misc.BrowserContract;
 
-import com.studio.browser.misc.BrowserContract;
+import java.util.List;
 
 public class BookmarkUtils {
     private final static String LOGTAG = "BookmarkUtils";
@@ -113,26 +109,95 @@ public class BookmarkUtils {
     /**
      * Convenience method for creating an intent that will add a shortcut to the home screen.
      */
-    static Intent createAddToHomeIntent(Context context, String url, String title,
-            Bitmap touchIcon, Bitmap favicon) {
-        Intent i = new Intent(INSTALL_SHORTCUT);
-        Intent shortcutIntent = createShortcutIntent(url);
-        i.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        i.putExtra(Intent.EXTRA_SHORTCUT_NAME, title);
-        i.putExtra(Intent.EXTRA_SHORTCUT_ICON, createIcon(context, touchIcon, favicon,
-                BookmarkIconType.ICON_HOME_SHORTCUT));
+    static Bitmap vectorToBitmap(Context context, int vectorResId) {
+        Drawable drawable = VectorDrawableCompat.create(context.getResources(), vectorResId, context.getTheme());
+        if (drawable == null) {
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
 
-        // Do not allow duplicate items
-        i.putExtra("duplicate", false);
-        return i;
+    static Intent createAddToHomeIntent(Context context, String url, String title, Bitmap touchIcon, Bitmap favicon) {
+        ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
+        if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported()) {
+            // Generate a consistent ID based on the URL
+            String shortcutId = "shortcut_" + url.hashCode();
+
+            // Check if shortcut already exists by checking pinned shortcuts
+            List<ShortcutInfo> pinnedShortcuts = shortcutManager.getPinnedShortcuts();
+            for (ShortcutInfo existingShortcut : pinnedShortcuts) {
+                if (existingShortcut.getId().equals(shortcutId)) {
+                    // Show a toast and return
+                    Handler mainHandler = new Handler(context.getMainLooper());
+                    mainHandler.post(() -> {
+                        Toast.makeText(context, R.string.shortcut_already_exists, Toast.LENGTH_SHORT).show();
+                    });
+                    return null;
+                }
+            }
+
+            // If we get here, shortcut doesn't exist, create it
+            Intent shortcutIntent = createShortcutIntent(url);
+            // Check if the touchIcon is null
+            if (touchIcon == null) {
+                // Attempt to load the Google icon from resources
+                touchIcon = vectorToBitmap(context, R.drawable.ic_google);
+                if (touchIcon == null) {
+                    Log.e(LOGTAG, "Failed to load Google icon bitmap. Using a default placeholder.");
+                    // Create a default placeholder bitmap
+                    touchIcon = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                } else {
+                    Log.d(LOGTAG, "Loaded Google icon bitmap successfully.");
+                }
+            }
+            ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(context, shortcutId)
+                    .setShortLabel(title)
+                    .setLongLabel(title)
+                    .setIcon(Icon.createWithBitmap(touchIcon))
+                    .setIntent(shortcutIntent)
+                    .build();
+
+            // Broadcast receiver for the callback
+            Intent callbackIntent = new Intent(context, ShortcutResultReceiver.class);
+            callbackIntent.setAction("com.studio.browser.SHORTCUT_CREATED");
+            IntentSender shortcutCallback = PendingIntent.getBroadcast(context, 0,
+                    callbackIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE).getIntentSender();
+
+            // Request to pin the shortcut with callback
+            shortcutManager.requestPinShortcut(shortcutInfo, shortcutCallback);
+            return null;  // Return null, we're handling it through the callback
+        }
+
+        // Fallback for older Android versions or when ShortcutManager is not available
+        Intent addIntent = new Intent(Intent.ACTION_CREATE_SHORTCUT);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, createShortcutIntent(url));
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, title);
+        if (touchIcon != null) {
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, touchIcon);
+        } else if (favicon != null) {
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, favicon);
+        }
+        return addIntent;
     }
 
     static Intent createShortcutIntent(String url) {
-        Intent shortcutIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Intent shorIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         long urlHash = url.hashCode();
-        long uniqueId = (urlHash << 32) | shortcutIntent.hashCode();
-        shortcutIntent.putExtra(Browser.EXTRA_APPLICATION_ID, Long.toString(uniqueId));
-        return shortcutIntent;
+        long uniqueId = (urlHash << 32) | shorIntent.hashCode();
+        shorIntent.putExtra(Browser.EXTRA_APPLICATION_ID, Long.toString(uniqueId));
+        return shorIntent;
+    }
+
+    public static class ShortcutResultReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, R.string.shortcut_created, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private static Bitmap getIconBackground(Context context, BookmarkIconType type, int density) {

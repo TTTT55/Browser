@@ -987,7 +987,7 @@ public class Controller
 
     @Override
     public void getVisitedHistory(final ValueCallback<String[]> callback) {
-        AsyncTask<Void, Void, String[]> task =
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String[]> task =
                 new AsyncTask<Void, Void, String[]>() {
             @Override
             public String[] doInBackground(Void... unused) {
@@ -1982,6 +1982,7 @@ public class Controller
         return ret;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void updateScreenshot(Tab tab) {
         // If this is a bookmarked site, add a screenshot to the database.
         // FIXME: Would like to make sure there is actually something to
@@ -2014,7 +2015,6 @@ public class Controller
 
         final ContentResolver cr = mActivity.getContentResolver();
         new AsyncTask<Void, Void, Void>() {
-            @SuppressLint("StaticFieldLeak")
             @Override
             protected Void doInBackground(Void... unused) {
                 Cursor cursor = null;
