@@ -1906,7 +1906,7 @@ public class Controller
         }
         // Put the dialog at the upper right of the screen, covering the
         // star on the title bar.
-        i.putExtra("gravity", Gravity.RIGHT | Gravity.TOP);
+        i.putExtra("gravity", Gravity.END | Gravity.TOP);
         return i;
     }
 
@@ -1942,45 +1942,35 @@ public class Controller
     }
 
     static Bitmap createScreenshot(WebView view, int width, int height) {
-        if (view == null || view.getContentHeight() == 0
-                || view.getWidth() == 0) {
+        if (view == null || view.getContentHeight() == 0 || view.getWidth() == 0) {
             return null;
         }
-        // We render to a bitmap 2x the desired size so that we can then
-        // re-scale it with filtering since canvas.scale doesn't filter
-        // This helps reduce aliasing at the cost of being slightly blurry
-        final int filter_scale = 2;
-        int scaledWidth = width * filter_scale;
-        int scaledHeight = height * filter_scale;
-        if (sThumbnailBitmap == null || sThumbnailBitmap.getWidth() != scaledWidth
-                || sThumbnailBitmap.getHeight() != scaledHeight) {
-            if (sThumbnailBitmap != null) {
-                sThumbnailBitmap.recycle();
-                sThumbnailBitmap = null;
-            }
-            sThumbnailBitmap =
-                    Bitmap.createBitmap(scaledWidth, scaledHeight, Bitmap.Config.RGB_565);
-        }
-        Canvas canvas = new Canvas(sThumbnailBitmap);
-        int contentWidth = view.getWidth();
-        float overviewScale = scaledWidth / (view.getScale() * contentWidth);
-        if (view instanceof BrowserWebView) {
-            int dy = -((BrowserWebView)view).getTitleHeight();
-            canvas.translate(0, dy * overviewScale);
-        }
 
-        canvas.scale(overviewScale, overviewScale);
+        Bitmap originalBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(originalBitmap);
+        view.draw(canvas);
 
-        if (view instanceof BrowserWebView) {
-            ((BrowserWebView)view).drawContent(canvas);
+        float viewAspectRatio = (float) originalBitmap.getWidth() / originalBitmap.getHeight();
+        float targetAspectRatio = (float) width / height;
+
+        Bitmap croppedBitmap;
+        if (viewAspectRatio > targetAspectRatio) {
+            int newWidth = (int) (originalBitmap.getHeight() * targetAspectRatio);
+            int xOffset = (originalBitmap.getWidth() - newWidth) / 2;
+            croppedBitmap = Bitmap.createBitmap(originalBitmap, xOffset, 0, newWidth, originalBitmap.getHeight());
         } else {
-            view.draw(canvas);
+            int newHeight = (int) (originalBitmap.getWidth() / targetAspectRatio);
+            croppedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.getWidth(), newHeight);
         }
-        Bitmap ret = Bitmap.createScaledBitmap(sThumbnailBitmap,
-                width, height, true);
-        canvas.setBitmap(null);
-        return ret;
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, width, height, true);
+
+        originalBitmap.recycle();
+        croppedBitmap.recycle();
+        return scaledBitmap;
     }
+
+
 
     @SuppressLint("StaticFieldLeak")
     private void updateScreenshot(Tab tab) {
