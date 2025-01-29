@@ -8,10 +8,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.BaseColumns;
 
+import com.studio.browser.AddBookmarkPage;
+import com.studio.browser.BrowserBookmarksPage;
 import com.studio.browser.R;
 import com.studio.browser.misc.BrowserContract.Bookmarks;
 import com.studio.browser.misc.BrowserContract.Combined;
@@ -19,6 +23,10 @@ import com.studio.browser.misc.BrowserContract.History;
 import com.studio.browser.misc.BrowserContract.Searches;
 import android.util.Log;
 import android.webkit.WebIconDatabase;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Browser {
     private static final String LOGTAG = "browser";
@@ -346,7 +354,64 @@ public class Browser {
      *  @removed
      */
     public static final void clearHistory(ContentResolver cr) {
+        // Delete all history entries that aren't bookmarks
+        // First get all bookmarked URLs
+        Set<String> bookmarkedUrls = new HashSet<>();
+        Cursor cursor = cr.query(Bookmarks.CONTENT_URI,
+                new String[] { "url" },
+                null,
+                null,
+                null);
 
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String url = cursor.getString(0);
+                if (url != null) {
+                    bookmarkedUrls.add(url);
+                }
+            }
+            cursor.close();
+        }
+
+        // If we have bookmarked URLs, exclude them from deletion
+        if (!bookmarkedUrls.isEmpty()) {
+            StringBuilder whereClause = new StringBuilder("url NOT IN (");
+            String[] selectionArgs = new String[bookmarkedUrls.size()];
+            int i = 0;
+            for (String url : bookmarkedUrls) {
+                if (i > 0) whereClause.append(",");
+                whereClause.append("?");
+                selectionArgs[i++] = url;
+            }
+            whereClause.append(")");
+
+            cr.delete(History.CONTENT_URI, whereClause.toString(), selectionArgs);
+
+            // Reset visit counts and dates for bookmarked entries
+            ContentValues values = new ContentValues();
+            values.put(Combined.VISITS, 0);
+            values.put(Combined.DATE_LAST_VISITED, 0);
+
+            whereClause = new StringBuilder("url IN (");
+            i = 0;
+            for (String url : bookmarkedUrls) {
+                if (i > 0) whereClause.append(",");
+                whereClause.append("?");
+                i++;
+            }
+            whereClause.append(")");
+
+            cr.update(History.CONTENT_URI, values, whereClause.toString(), selectionArgs);
+        } else {
+            // No bookmarks, just clear everything
+            cr.delete(History.CONTENT_URI, null, null);
+        }
+
+        // Clear the searches
+        cr.delete(Searches.CONTENT_URI, null, null);
+
+        // Notify that history has changed
+        cr.notifyChange(History.CONTENT_URI, null);
     }
 
     /**
@@ -372,6 +437,40 @@ public class Browser {
      */
     public static final void deleteFromHistory(ContentResolver cr,
                                                String url) {
+        if (url == null) {
+            return;
+        }
+
+        // First, check if this URL is bookmarked
+        Cursor cursor = cr.query(Bookmarks.CONTENT_URI,
+                new String[] { Bookmarks._ID },
+                "url = ?",
+                new String[] { url },
+                null);
+
+        boolean isBookmarked = cursor != null && cursor.getCount() > 0;
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        if (!isBookmarked) {
+            // If not bookmarked, delete from history
+            cr.delete(History.CONTENT_URI,
+                    "url = ?",
+                    new String[] { url });
+        } else {
+            // For bookmarked entries, reset their history data
+            ContentValues values = new ContentValues();
+            values.put(Combined.VISITS, 0);
+            values.put(Combined.DATE_LAST_VISITED, 0);
+
+            cr.update(History.CONTENT_URI,
+                    values,
+                    "url = ?",
+                    new String[] { url });
+        }
+
+        cr.notifyChange(History.CONTENT_URI, null);
     }
 
     /**

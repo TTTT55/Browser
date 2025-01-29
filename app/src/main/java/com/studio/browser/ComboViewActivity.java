@@ -50,10 +50,11 @@ public class ComboViewActivity extends FragmentActivity implements CombinedBookm
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         if (BrowserActivity.isTablet(this)) {
             bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
-                    | ActionBar.DISPLAY_USE_LOGO);
+                    | ActionBar.DISPLAY_USE_LOGO
+                    | ActionBar.DISPLAY_HOME_AS_UP);
             bar.setHomeButtonEnabled(true);
         } else {
-            bar.setDisplayOptions(0);
+            bar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
         }
 
         mTabsAdapter = new TabsAdapter(this, mViewPager);
