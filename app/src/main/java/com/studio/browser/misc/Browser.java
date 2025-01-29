@@ -23,6 +23,7 @@ import com.studio.browser.misc.BrowserContract.History;
 import com.studio.browser.misc.BrowserContract.Searches;
 import android.util.Log;
 import android.webkit.WebIconDatabase;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,6 +168,18 @@ public class Browser {
     public static final void saveBookmark(Context c,
                                           String title,
                                           String url) {
+        if (c == null || url == null || url.isEmpty()) {
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(Bookmarks.TITLE, title);
+        values.put(Bookmarks.URL, url);
+        values.put(Bookmarks.IS_FOLDER, 0);
+
+        Uri bookmarksUri = Bookmarks.CONTENT_URI;
+        c.getContentResolver().insert(bookmarksUri, values);
+        Toast.makeText(c, "Added to bookmarks.", Toast.LENGTH_SHORT).show();
     }
 
     /**
