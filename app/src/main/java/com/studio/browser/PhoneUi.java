@@ -61,6 +61,8 @@ public class PhoneUi extends BaseUi {
         wm.getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
+
+        browser.getWindow().setStatusBarColor(getActivity().getResources().getColor(R.color.title_bar_bg_new));
     }
 
     @Override
@@ -248,10 +250,12 @@ public class PhoneUi extends BaseUi {
     public void showWeb(boolean animate) {
         super.showWeb(animate);
         hideNavScreen(mUiController.getTabControl().getCurrentPosition(), animate);
+        mNavScreen.onHide();
     }
 
     void showNavScreen() {
         mShowNav = true;
+        mNavScreen.onShow();
         mUiController.setBlockEvents(true);
         if (mNavScreen == null) {
             mNavScreen = new NavScreen(mActivity, mUiController, this);
@@ -337,6 +341,7 @@ public class PhoneUi extends BaseUi {
 
     void hideNavScreen(int position, boolean animate) {
         mShowNav = false;
+        mNavScreen.onHide();
         if (!showingNavScreen()) return;
         final Tab tab = mUiController.getTabControl().getTab(position);
         if ((tab == null) || !animate) {

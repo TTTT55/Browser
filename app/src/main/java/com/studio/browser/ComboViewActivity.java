@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -81,6 +82,8 @@ public class ComboViewActivity extends FragmentActivity implements CombinedBookm
                 break;
             }
         }
+
+        getWindow().setNavigationBarColor(Color.parseColor("#ECF0FD"));
     }
 
     @Override

@@ -38,4 +38,5 @@
     <color name="qc_tab_nr">#F033B5E5</color>
     <color name="tabViewTitleBackground">#D0000000</color>
     <color name="navtab_bg">#80606060</color>
+    <color name="title_bar_bg_new">#CC0d0d0d</color>
 </resources>

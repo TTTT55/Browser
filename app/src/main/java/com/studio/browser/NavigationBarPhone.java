@@ -1,23 +1,9 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.studio.browser;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -25,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnDismissListener;
@@ -93,6 +80,21 @@ public class NavigationBarPhone extends NavigationBarBase implements
         mIncognitoIcon = findViewById(R.id.incognito_icon);
     }
 
+    private int parseColor(String color) {
+        if (color.startsWith("rgb")) {
+            String[] components = color.substring(color.indexOf('(') + 1,
+                    color.length() - 1).split(",");
+
+            int r = Integer.parseInt(components[0].trim());
+            int g = Integer.parseInt(components[1].trim());
+            int b = Integer.parseInt(components[2].trim());
+
+            return Color.rgb(r, g, b);
+        } else {
+            return Color.parseColor(color);
+        }
+    }
+
     @Override
     public void onProgressStarted() {
         super.onProgressStarted();
@@ -104,6 +106,39 @@ public class NavigationBarPhone extends NavigationBarBase implements
                 mStopButton.setVisibility(View.VISIBLE);
             }
         }
+
+        // WebViewClient to detect page loads
+        mBaseUi.getWebView().setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String script = "javascript:(function() { " +
+                        "var bodyBg = window.getComputedStyle(document.body).backgroundColor;" +
+                        "AndroidInterface.onBackgroundColorReceived(bodyBg);" +
+                        "})()";
+
+                view.evaluateJavascript(script, null);
+            }
+        });
+        mBaseUi.getWebView().addJavascriptInterface(new Object() {
+            @android.webkit.JavascriptInterface
+            public void onBackgroundColorReceived(String color) {
+                try {
+                    final int navColor = parseColor(color);
+                    if (getContext() instanceof BrowserActivity) {
+                        final BrowserActivity activity = (BrowserActivity) getContext();
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                activity.updateNavigationBarColor(navColor);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "AndroidInterface");
     }
 
     @Override

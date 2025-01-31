@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ public class NavScreen extends RelativeLayout
     HashMap<Tab, View> mTabViews;
 
     private WindowManager wm;
+    private int mOriginalNavColor;
 
     public NavScreen(Activity activity, UiController ctl, PhoneUi ui) {
         super(activity);
@@ -65,7 +67,19 @@ public class NavScreen extends RelativeLayout
         mOrientation = activity.getResources().getConfiguration().orientation;
         init();
 
+        // Store the original color when NavScreen is created
+        mOriginalNavColor = ((BrowserActivity)activity).getDefaultNavigationBarColor();
+
         wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+    }
+
+    public void onShow() {
+        mOriginalNavColor = mActivity.getWindow().getNavigationBarColor();
+        mActivity.getWindow().setNavigationBarColor(Color.BLACK);
+    }
+
+    public void onHide() {
+        mActivity.getWindow().setNavigationBarColor(mOriginalNavColor);
     }
 
     protected void showMenu() {
