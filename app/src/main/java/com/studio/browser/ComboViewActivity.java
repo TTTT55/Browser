@@ -63,8 +63,6 @@ public class ComboViewActivity extends FragmentActivity implements CombinedBookm
                 BrowserBookmarksPage.class, args);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.tab_history),
                 BrowserHistoryPage.class, args);
-        mTabsAdapter.addTab(bar.newTab().setText(R.string.tab_snapshots),
-                BrowserSnapshotPage.class, args);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(

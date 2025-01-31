@@ -1580,8 +1580,6 @@ public class Controller
             bookmarksOrHistoryPicker(ComboViews.Bookmarks);
         } else if (item.getItemId() == R.id.history_menu_id) {
             bookmarksOrHistoryPicker(ComboViews.History);
-        } else if (item.getItemId() == R.id.snapshots_menu_id) {
-            bookmarksOrHistoryPicker(ComboViews.Snapshots);
         } else if (item.getItemId() == R.id.add_bookmark_menu_id) {
             bookmarkCurrentPage();
         } else if (item.getItemId() == R.id.stop_reload_menu_id) {
